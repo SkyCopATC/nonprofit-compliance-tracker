@@ -1,0 +1,3150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build Your Club — Nonprofit Compliance Tracker</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f8;color:#1a1a2e;font-size:14px;-webkit-font-smoothing:antialiased}
+:root{--navy:#1B3A5C;--teal:#2A7B6F;--gold:#D4A017;--red:#c0392b;--green:#2d7a4f;--bg:#f0f4f8;--white:#fff;--border:#e2e8f0;--text:#1a1a2e;--muted:#64748b;--light:#f8fafc}
+.hidden{display:none!important}
+
+/* ── AUTH SCREENS ── */
+.auth-wrap{min-height:100vh;background:linear-gradient(135deg,var(--navy),var(--teal));display:flex;align-items:center;justify-content:center;padding:24px}
+.auth-card{background:var(--white);border-radius:24px;padding:40px;width:100%;max-width:440px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.auth-logo{width:48px;height:48px;background:var(--navy);border-radius:14px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;margin:0 auto 20px}
+.auth-title{font-size:24px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:6px}
+.auth-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:24px}
+.auth-tabs{display:flex;background:var(--light);border-radius:10px;padding:4px;margin-bottom:20px}
+.auth-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;border-radius:8px;color:var(--muted);transition:.15s}
+.auth-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);background:#fff;font-family:inherit;transition:.15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--teal)}
+.field textarea{resize:vertical;min-height:80px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:.2s;white-space:nowrap;font-family:inherit}
+.btn-primary{background:var(--navy);color:#fff;width:100%}
+.btn-primary:hover{background:#264a73}
+.btn-ghost{background:transparent;color:var(--navy)}
+.btn-ghost:hover{background:var(--light)}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:#236b60}
+.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--navy)}
+.auth-foot{text-align:center;margin-top:18px;font-size:13px;color:var(--muted)}
+.auth-foot a{color:var(--navy);font-weight:600;cursor:pointer}
+
+/* ── ONBOARDING ── */
+.ob-wrap{min-height:100vh;background:linear-gradient(135deg,var(--navy),var(--teal));display:flex;align-items:center;justify-content:center;padding:24px}
+.ob-card{background:var(--white);border-radius:24px;width:100%;max-width:680px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.ob-progress{display:flex;background:var(--light);height:4px}
+.ob-progress span{flex:1;background:var(--border);transition:.3s}
+.ob-progress span.done{background:var(--teal)}
+.ob-body{padding:40px}
+.ob-step{font-size:12px;color:var(--teal);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.ob-title{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.ob-desc{font-size:14px;color:var(--muted);margin-bottom:24px}
+.ob-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+.ob-pick{padding:14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;text-align:center;transition:.15s;background:#fff}
+.ob-pick:hover{border-color:var(--teal)}
+.ob-pick.selected{border-color:var(--teal);background:rgba(42,123,111,.06)}
+.ob-pick-title{font-size:13px;font-weight:600;color:var(--navy)}
+.ob-pick-desc{font-size:11px;color:var(--muted);margin-top:3px}
+.ob-nav{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:10px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:240px;background:var(--navy);min-height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:fixed;left:0;top:0;bottom:0;z-index:10}
+.sidebar-logo{padding:20px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px}
+.sidebar-logo .mark{width:34px;height:34px;background:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0}
+.sidebar-logo .text p{font-size:13px;font-weight:700;color:#fff;line-height:1.2}
+.sidebar-logo .text span{font-size:11px;color:rgba(255,255,255,.4);line-height:1}
+.sidebar-org{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-org .label{font-size:10px;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.sidebar-org .name{font-size:12px;color:rgba(255,255,255,.8);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;color:rgba(255,255,255,.7);background:transparent;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:left;font-family:inherit;transition:.15s;width:100%}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.08);color:#fff}
+.nav-item .icon{font-size:15px;width:18px;text-align:center}
+.sidebar-bottom{padding:12px;border-top:1px solid rgba(255,255,255,.08)}
+.user-row{display:flex;align-items:center;gap:10px;padding:6px}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.u-name{font-size:12px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.signout-btn{background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:14px;padding:4px;font-family:inherit}
+.signout-btn:hover{color:#fff}
+
+/* ── MAIN CONTENT ── */
+.main{margin-left:240px;flex:1;min-height:100vh}
+.page{padding:32px;max-width:1100px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+.page-title{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted)}
+
+/* ── CARDS / SECTIONS ── */
+.section{background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px}
+.section-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.section-title .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px}
+.badge-red{background:#fde8e6;color:var(--red)}
+.badge-amber{background:#fff4d6;color:#a86b00}
+.badge-green{background:#dcf5e7;color:var(--green)}
+.badge-grey{background:#eef2f7;color:var(--muted)}
+.badge-blue{background:#dbeafe;color:var(--navy)}
+
+/* Dashboard stat tiles */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px}
+.stat-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.stat-num{font-size:28px;font-weight:700;color:var(--navy);line-height:1}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.stat-card.alert{border-color:var(--red)}
+.stat-card.alert .stat-num{color:var(--red)}
+
+/* Deadline list rows */
+.dl-row{display:flex;align-items:center;gap:14px;padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;transition:.15s}
+.dl-row:hover{border-color:var(--teal)}
+.dl-row.overdue{border-left:3px solid var(--red)}
+.dl-row.soon{border-left:3px solid var(--gold)}
+.dl-row.upcoming{border-left:3px solid var(--teal)}
+.dl-row.done{opacity:.55}
+.dl-when{font-size:12px;font-weight:700;text-align:center;min-width:64px;padding:6px 8px;border-radius:8px;background:var(--light);color:var(--navy)}
+.dl-when.overdue{background:#fde8e6;color:var(--red)}
+.dl-when.soon{background:#fff4d6;color:#a86b00}
+.dl-info{flex:1;min-width:0}
+.dl-name{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.dl-meta{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-status{font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;white-space:nowrap}
+.dl-status select{background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;color:inherit}
+
+/* Calendar */
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.cal-grid{grid-template-columns:repeat(2,1fr)}}
+.cal-month{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px}
+.cal-month-name{font-size:13px;font-weight:700;color:var(--navy);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+.cal-event{font-size:12px;padding:6px 0;color:var(--text);border-bottom:1px dashed var(--border)}
+.cal-event:last-child{border:none}
+.cal-event .day{font-weight:700;color:var(--navy);margin-right:6px;font-size:11px}
+.cal-event .ev-empty{color:var(--muted);font-style:italic}
+
+/* Filing detail modal-like view */
+.filing-detail{padding:18px;background:var(--light);border-radius:10px;margin-top:10px;font-size:13px;color:var(--text);line-height:1.6;display:none}
+.filing-detail.show{display:block}
+.filing-detail h4{font-size:13px;color:var(--navy);font-weight:700;margin:10px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.filing-detail h4:first-child{margin-top:0}
+.filing-detail a{color:var(--teal);font-weight:600}
+
+/* Documents */
+.doc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.doc-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:.15s;display:flex;flex-direction:column;gap:6px}
+.doc-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.doc-icon{font-size:22px;margin-bottom:4px}
+.doc-name{font-size:14px;font-weight:700;color:var(--navy)}
+.doc-desc{font-size:12px;color:var(--muted);line-height:1.4;flex:1}
+.doc-meta{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* Doc generator form */
+.gen-form{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:20px}
+.gen-output{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;font-family:Georgia,serif;line-height:1.6;color:var(--text);min-height:200px;white-space:pre-wrap;font-size:14px}
+.gen-output.placeholder{color:var(--muted);font-style:italic;font-family:inherit;font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center}
+.gen-toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}
+
+/* Education */
+.edu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.edu-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:.15s}
+.edu-card:hover{border-color:var(--teal);transform:translateY(-2px)}
+.edu-tag{font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.edu-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.edu-snip{font-size:12px;color:var(--muted);line-height:1.4}
+.edu-article{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px;line-height:1.7;color:var(--text);font-size:14px}
+.edu-article h2{font-size:22px;color:var(--navy);margin-bottom:8px}
+.edu-article h3{font-size:15px;color:var(--navy);margin:18px 0 6px}
+.edu-article p{margin-bottom:12px}
+.edu-article ul{margin-left:22px;margin-bottom:12px}
+.edu-article li{margin-bottom:4px}
+.edu-back{background:transparent;border:none;color:var(--teal);font-weight:600;cursor:pointer;font-size:13px;padding:0;margin-bottom:16px;font-family:inherit}
+
+/* Settings */
+.settings-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border:none}
+.settings-label{font-size:13px;font-weight:600;color:var(--text)}
+.settings-value{font-size:13px;color:var(--muted)}
+
+/* ── MOBILE SIDEBAR TOGGLE ── */
+.mobile-toggle{display:none;position:fixed;top:12px;left:12px;z-index:30;background:var(--navy);color:#fff;border:none;border-radius:8px;width:42px;height:42px;font-size:22px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);align-items:center;justify-content:center;padding:0}
+.sidebar-close{display:none;position:absolute;top:12px;right:12px;background:rgba(255,255,255,.08);border:none;color:#fff;width:34px;height:34px;font-size:20px;line-height:1;cursor:pointer;padding:0;border-radius:8px;z-index:5;align-items:center;justify-content:center}
+.sidebar-close:hover{background:rgba(255,255,255,.18)}
+.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9}
+.sidebar-backdrop.show{display:block}
+@media(max-width:768px){
+  .mobile-toggle{display:flex}
+  .sidebar-close{display:flex}
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;width:260px;box-shadow:0 0 24px rgba(0,0,0,.25)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .page{padding:64px 16px 24px}
+}
+
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;padding:24px;z-index:50}
+.modal-box{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:90vh;overflow:auto}
+.modal-title{font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:22px;cursor:pointer;float:right;line-height:1;padding:0}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap}
+
+/* Pro badge in sidebar */
+.pro-badge{background:linear-gradient(135deg,var(--gold),#b58814);border-radius:10px;padding:10px 12px;cursor:pointer;margin-bottom:10px;transition:.15s}
+.pro-badge:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(212,160,23,.3)}
+.pro-badge.is-pro{background:linear-gradient(135deg,var(--teal),#236b60);cursor:default}
+.pro-badge.is-pro:hover{transform:none;box-shadow:none}
+.badge-label{font-size:12px;font-weight:700;color:#fff;line-height:1.2}
+.badge-sub{font-size:10px;color:rgba(255,255,255,.85);margin-top:2px}
+
+/* Team page */
+.team-code-display{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;padding:24px;border-radius:14px;text-align:center;margin-bottom:20px}
+.team-code-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-bottom:8px}
+.team-code-value{font-size:34px;font-weight:700;letter-spacing:.12em;font-family:'Courier New',monospace;margin-bottom:10px}
+.team-member-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff}
+.team-member-info{flex:1;min-width:0}
+.team-member-name{font-size:13px;font-weight:600;color:var(--navy)}
+.team-member-email{font-size:11px;color:var(--muted)}
+.role-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em}
+.role-leader{background:#dbeafe;color:var(--navy)}
+.role-member{background:#eef2f7;color:var(--muted)}
+
+/* History */
+.hist-row{display:flex;align-items:center;gap:12px;padding:11px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:6px;background:#fff;font-size:13px}
+.hist-when{font-size:11px;color:var(--muted);min-width:120px;white-space:nowrap}
+.hist-who{font-size:12px;font-weight:600;color:var(--navy);min-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-what{flex:1;color:var(--text)}
+.hist-status-chip{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.04em;display:inline-block}
+
+/* Analytics */
+.score-card{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;padding:24px;border-radius:16px;margin-bottom:20px;text-align:center}
+.score-num{font-size:54px;font-weight:700;line-height:1}
+.score-label{font-size:13px;opacity:.85;margin-top:4px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:10px;font-size:13px}
+.bar-label{min-width:140px;color:var(--text);font-weight:600}
+.bar-track{flex:1;background:var(--light);border-radius:6px;height:22px;position:relative;overflow:hidden}
+.bar-fill{height:100%;background:var(--teal);border-radius:6px;display:flex;align-items:center;padding-left:8px;color:#fff;font-size:11px;font-weight:600;min-width:24px}
+.bar-meta{font-size:11px;color:var(--muted);min-width:60px;text-align:right}
+
+/* Admin */
+.admin-team{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:#fff;cursor:pointer;transition:.15s}
+.admin-team:hover{border-color:var(--teal);transform:translateY(-1px)}
+.admin-team-info{flex:1}
+.admin-team-name{font-size:14px;font-weight:700;color:var(--navy)}
+.admin-team-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.admin-banner{background:linear-gradient(135deg,var(--gold),#b58814);color:#fff;padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:13px}
+.admin-banner b{font-weight:700}
+
+/* Misc */
+.empty-state{padding:40px;text-align:center;color:var(--muted);font-size:13px}
+.disclaimer{background:#fff7d6;border:1px solid #f5d77f;border-radius:10px;padding:12px;font-size:12px;color:#5c4400;margin-bottom:20px;line-height:1.5}
+.disclaimer b{color:#3d2d00}
+</style>
+</head>
+<body>
+
+<!-- ════════════ AUTH ════════════ -->
+<div id="screen-auth" class="auth-wrap hidden">
+  <div class="auth-card">
+    <div class="auth-logo">B</div>
+    <h1 class="auth-title">Build Your Club</h1>
+    <p class="auth-sub">Nonprofit Compliance Tracker</p>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</div>
+      <div class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</div>
+    </div>
+    <div id="form-signin">
+      <div class="field"><label>Email</label><input type="email" id="si-email" placeholder="you@nonprofit.org"></div>
+      <div class="field"><label>Password</label><input type="password" id="si-pass" placeholder="••••••••"></div>
+      <button class="btn btn-primary" onclick="doSignIn()">Sign In</button>
+      <p class="auth-foot">Demo account: <b>demo@example.org</b> / <b>demo</b></p>
+    </div>
+    <div id="form-signup" class="hidden">
+      <div class="field"><label>Your Name</label><input type="text" id="su-name" placeholder="Pat Lee"></div>
+      <div class="field"><label>Email</label><input type="email" id="su-email" placeholder="you@nonprofit.org"></div>
+      <div class="field"><label>Password</label><input type="password" id="su-pass" placeholder="At least 6 characters"></div>
+      <button class="btn btn-primary" onclick="doSignUp()">Create Account →</button>
+      <p class="auth-foot">By creating an account you agree this is a demo and no real data is stored remotely.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ONBOARDING ════════════ -->
+<div id="screen-onboard" class="ob-wrap hidden">
+  <div class="ob-card">
+    <div class="ob-progress">
+      <span id="op-1" class="done"></span>
+      <span id="op-2"></span>
+      <span id="op-3"></span>
+      <span id="op-4"></span>
+    </div>
+    <!-- Step 1: Org type -->
+    <div class="ob-body" id="ob-step-1">
+      <div class="ob-step">Step 1 of 4</div>
+      <h2 class="ob-title">What type of organization?</h2>
+      <p class="ob-desc">This determines which federal filings apply to you.</p>
+      <div class="ob-grid" id="ob-orgtypes"></div>
+      <div class="field"><label>Organization Name</label><input type="text" id="ob-orgname" placeholder="Build Your Club Foundation"></div>
+      <div class="ob-nav">
+        <button class="btn btn-ghost" onclick="signOut()">← Sign out</button>
+        <button class="btn btn-teal" onclick="obNext(1)">Continue →</button>
+      </div>
+    </div>
+    <!-- Step 2: State + fiscal year -->
+    <div class="ob-body hidden" id="ob-step-2">
+      <div class="ob-step">Step 2 of 4</div>
+      <h2 class="ob-title">Where are you incorporated?</h2>
+      <p class="ob-desc">We'll add your state's specific compliance requirements.</p>
+      <div class="field"><label>State of Incorporation</label><select id="ob-state"></select></div>
+      <div class="field"><label>Fiscal Year End</label><select id="ob-fye">
+        <option value="12-31">December 31</option>
+        <option value="06-30">June 30</option>
+        <option value="09-30">September 30</option>
+        <option value="03-31">March 31</option>
+        <option value="07-31">July 31</option>
+        <option value="08-31">August 31</option>
+      </select></div>
+      <div class="ob-nav">
+        <button class="btn btn-ghost" onclick="obBack(2)">← Back</button>
+        <button class="btn btn-teal" onclick="obNext(2)">Continue →</button>
+      </div>
+    </div>
+    <!-- Step 3: Revenue bracket -->
+    <div class="ob-body hidden" id="ob-step-3">
+      <div class="ob-step">Step 3 of 4</div>
+      <h2 class="ob-title">What's your annual gross revenue?</h2>
+      <p class="ob-desc">This determines which Form 990 version you file with the IRS.</p>
+      <div class="ob-grid" id="ob-revs"></div>
+      <div class="ob-nav">
+        <button class="btn btn-ghost" onclick="obBack(3)">← Back</button>
+        <button class="btn btn-teal" onclick="obNext(3)">Continue →</button>
+      </div>
+    </div>
+    <!-- Step 4: Staff -->
+    <div class="ob-body hidden" id="ob-step-4">
+      <div class="ob-step">Step 4 of 4</div>
+      <h2 class="ob-title">Do you have paid staff?</h2>
+      <p class="ob-desc">Paid employees add payroll tax filings to your calendar.</p>
+      <div class="ob-grid" id="ob-staff"></div>
+      <div class="field"><label>States where you actively fundraise (optional)</label>
+        <select id="ob-fundstates" multiple size="5" style="height:auto"></select>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Hold Ctrl/Cmd to select multiple. Many states require charitable solicitation registration.</div>
+      </div>
+      <div class="ob-nav">
+        <button class="btn btn-ghost" onclick="obBack(4)">← Back</button>
+        <button class="btn btn-teal" onclick="finishOnboarding()">Finish setup →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════ TEAM CHOICE (after sign-up) ════════════ -->
+<div id="screen-teamchoice" class="auth-wrap hidden">
+  <div class="auth-card">
+    <div class="auth-logo">B</div>
+    <h1 class="auth-title">Welcome aboard</h1>
+    <p class="auth-sub">Are you starting a new compliance tracker or joining a teammate?</p>
+    <button class="btn btn-primary" style="margin-bottom:10px" onclick="chooseTeamPath('new')">Start a new organization →</button>
+    <button class="btn btn-outline" style="width:100%;margin-bottom:14px" onclick="chooseTeamPath('join')">Join an existing team</button>
+    <div id="join-team-section" class="hidden">
+      <div class="field"><label>Team Code</label><input type="text" id="join-code" placeholder="e.g. ABC234" style="text-transform:uppercase;letter-spacing:.1em;font-family:'Courier New',monospace"></div>
+      <button class="btn btn-teal" style="width:100%" onclick="joinTeamByCode()">Join Team →</button>
+    </div>
+    <p class="auth-foot" style="margin-top:18px"><a onclick="signOut()">← Sign out</a></p>
+  </div>
+</div>
+
+<!-- ════════════ MAIN APP ════════════ -->
+<div id="screen-app" class="hidden" style="display:flex">
+  <button class="mobile-toggle" type="button" onclick="toggleSidebar()" aria-label="Open menu">☰</button>
+  <div class="sidebar-backdrop" onclick="closeSidebar()"></div>
+  <aside class="sidebar">
+    <button class="sidebar-close" type="button" onclick="closeSidebar()" aria-label="Close menu">✕</button>
+    <div class="sidebar-logo">
+      <div class="mark">B</div>
+      <div class="text"><p>Build Your Club</p><span>Compliance Tracker</span></div>
+    </div>
+    <div class="sidebar-org"><div class="label">Organization</div><div class="name" id="sb-org">—</div></div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-dashboard" onclick="navigate('dashboard')"><span class="icon">⊞</span> Dashboard</button>
+      <button class="nav-item" id="nav-calendar" onclick="navigate('calendar')"><span class="icon">📅</span> Calendar</button>
+      <button class="nav-item" id="nav-filings" onclick="navigate('filings')"><span class="icon">📋</span> Filings</button>
+      <button class="nav-item" id="nav-documents" onclick="navigate('documents')"><span class="icon">📄</span> Documents</button>
+      <button class="nav-item" id="nav-education" onclick="navigate('education')"><span class="icon">📚</span> Learn</button>
+      <a class="nav-item" href="Guide.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none"><span class="icon">📖</span> User Guide</a>
+      <button class="nav-item" id="nav-history" onclick="navigate('history')"><span class="icon">🕐</span> History</button>
+      <button class="nav-item" id="nav-analytics" onclick="navigate('analytics')"><span class="icon">📊</span> Analytics</button>
+      <button class="nav-item" id="nav-team" onclick="navigate('team')"><span class="icon">👥</span> Team</button>
+      <button class="nav-item" id="nav-settings" onclick="navigate('settings')"><span class="icon">⚙</span> Settings</button>
+      <button class="nav-item hidden" id="nav-admin" onclick="navigate('admin')"><span class="icon">🔐</span> Admin</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="pro-badge" id="pro-badge" onclick="openUpgradeModal()">
+        <div class="badge-label" id="pro-label">⚡ Upgrade to Pro</div>
+        <div class="badge-sub" id="pro-sub">$29/month · 14-day free trial</div>
+      </div>
+      <div class="user-row">
+        <div class="user-avatar" id="sb-avatar">?</div>
+        <div class="user-info"><div class="u-name" id="sb-uname">—</div></div>
+        <button class="signout-btn" onclick="signOut()" title="Sign out">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="page-dashboard" class="page"></div>
+    <div id="page-calendar" class="page hidden"></div>
+    <div id="page-filings" class="page hidden"></div>
+    <div id="page-documents" class="page hidden"></div>
+    <div id="page-education" class="page hidden"></div>
+    <div id="page-settings" class="page hidden"></div>
+
+    <div id="page-team" class="page hidden"></div>
+    <div id="page-history" class="page hidden"></div>
+    <div id="page-analytics" class="page hidden"></div>
+    <div id="page-admin" class="page hidden"></div>
+  </main>
+</div>
+
+<!-- Upgrade modal -->
+<div id="upgrade-modal" class="modal-bg hidden">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeUpgradeModal()">✕</button>
+    <div style="font-size:28px;margin-bottom:8px">⚡</div>
+    <div class="modal-title">Upgrade to Compliance Pro</div>
+    <div class="modal-sub">Unlock unlimited team seats, priority support, and advanced features.</div>
+    <ul style="font-size:13px;color:var(--text);line-height:1.7;margin:0 0 18px 18px">
+      <li><b>Unlimited team members</b> — Free is capped at 3 seats</li>
+      <li>Priority email support</li>
+      <li>Custom compliance items (coming soon)</li>
+      <li>Export your data anytime</li>
+    </ul>
+    <div style="background:var(--light);padding:14px;border-radius:10px;text-align:center;margin-bottom:8px">
+      <div style="font-size:24px;font-weight:700;color:var(--navy)">$29<span style="font-size:13px;color:var(--muted);font-weight:400">/month</span></div>
+      <div style="font-size:12px;color:var(--muted)">14-day free trial · cancel anytime</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeUpgradeModal()">Maybe later</button>
+      <button class="btn btn-teal" onclick="startProTrial()">Start 14-day Free Trial →</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ═════════════════════════════════════════════
+//  STATIC DATA — org types, brackets, states
+// ═════════════════════════════════════════════
+const ORG_TYPES = [
+  { id:'501c3-public', label:'501(c)(3) Public Charity', desc:'Most nonprofits — supported by donations or grants' },
+  { id:'501c3-pf', label:'501(c)(3) Private Foundation', desc:'Funded by a single source; files Form 990-PF' },
+  { id:'501c4', label:'501(c)(4) Social Welfare', desc:'Civic leagues, advocacy organizations' },
+  { id:'501c6', label:'501(c)(6) Trade / Business League', desc:'Chambers of commerce, professional groups' },
+  { id:'other', label:'Other / Not Sure', desc:'Generic 501(c) requirements will be shown' }
+];
+
+const REV_BRACKETS = [
+  { id:'tiny', label:'Under $50,000', desc:'Files Form 990-N (e-Postcard)' },
+  { id:'small', label:'$50,000 — $200,000', desc:'Files Form 990-EZ' },
+  { id:'medium', label:'$200,000 — $1M', desc:'Files Form 990-EZ or full 990' },
+  { id:'large', label:'$1M — $10M', desc:'Files full Form 990' },
+  { id:'xlarge', label:'Over $10M', desc:'Files full Form 990; audit usually required' }
+];
+
+const STAFF_OPTIONS = [
+  { id:'none', label:'No paid staff', desc:'Volunteer-run only' },
+  { id:'few', label:'1–5 paid staff', desc:'Adds payroll filings' },
+  { id:'many', label:'6+ paid staff', desc:'Adds payroll + workers comp considerations' }
+];
+
+const STATES = {
+  AL:'Alabama', AK:'Alaska', AZ:'Arizona', AR:'Arkansas', CA:'California',
+  CO:'Colorado', CT:'Connecticut', DE:'Delaware', DC:'District of Columbia',
+  FL:'Florida', GA:'Georgia', HI:'Hawaii', ID:'Idaho', IL:'Illinois',
+  IN:'Indiana', IA:'Iowa', KS:'Kansas', KY:'Kentucky', LA:'Louisiana',
+  ME:'Maine', MD:'Maryland', MA:'Massachusetts', MI:'Michigan', MN:'Minnesota',
+  MS:'Mississippi', MO:'Missouri', MT:'Montana', NE:'Nebraska', NV:'Nevada',
+  NH:'New Hampshire', NJ:'New Jersey', NM:'New Mexico', NY:'New York',
+  NC:'North Carolina', ND:'North Dakota', OH:'Ohio', OK:'Oklahoma', OR:'Oregon',
+  PA:'Pennsylvania', RI:'Rhode Island', SC:'South Carolina', SD:'South Dakota',
+  TN:'Tennessee', TX:'Texas', UT:'Utah', VT:'Vermont', VA:'Virginia',
+  WA:'Washington', WV:'West Virginia', WI:'Wisconsin', WY:'Wyoming'
+};
+
+// ═════════════════════════════════════════════
+//  COMPLIANCE ITEMS — federal, governance, state
+//  Each item: id, name, agency, frequency, dueRule, severity, category, applies, details
+//  dueRule: function(profile) -> Date OR null
+// ═════════════════════════════════════════════
+
+// Helpers
+function fyEnd(profile, yearOffset=0){
+  const [m,d] = (profile.fye || '12-31').split('-').map(Number);
+  const y = new Date().getFullYear() + yearOffset;
+  return new Date(y, m-1, d);
+}
+function monthsAfterFYE(profile, months){
+  const e = fyEnd(profile);
+  const out = new Date(e); out.setMonth(out.getMonth() + months); out.setDate(15);
+  if (out < new Date()) out.setFullYear(out.getFullYear()+1);
+  return out;
+}
+function nextOccurrence(month, day){
+  const now = new Date(); const out = new Date(now.getFullYear(), month-1, day);
+  if (out < now) out.setFullYear(out.getFullYear()+1);
+  return out;
+}
+function quarterlyDates(){
+  const dates = [[4,30],[7,31],[10,31],[1,31]];
+  const upcoming = [];
+  const now = new Date();
+  for (let i=0;i<4;i++){
+    const d = new Date(now.getFullYear(), dates[i][0]-1, dates[i][1]);
+    if (d < now) d.setFullYear(d.getFullYear()+1);
+    upcoming.push(d);
+  }
+  return upcoming.sort((a,b)=>a-b)[0];
+}
+
+const FEDERAL_ITEMS = [
+  { id:'f990n', name:'Form 990-N (e-Postcard)', agency:'IRS', frequency:'Annual', category:'Federal',
+    applies: p => p.orgType==='501c3-public' && p.revBracket==='tiny',
+    dueRule: p => monthsAfterFYE(p, 5),
+    summary:'Smallest annual filing — confirms basic info. 8 questions, ~5 minutes online.',
+    details:`<h4>Who must file</h4><p>501(c)(3) public charities with gross receipts ≤ $50,000.</p><h4>Deadline</h4><p>15th day of the 5th month after fiscal year end. For a December 31 fiscal year that's <b>May 15</b>.</p><h4>How to file</h4><p>Online at the IRS e-Postcard portal. No cost. No paper option.</p><h4>What you need</h4><ul><li>EIN</li><li>Tax year</li><li>Legal name & mailing address</li><li>Name & address of principal officer</li><li>Confirmation gross receipts are normally ≤ $50,000</li></ul><h4>Why it matters</h4><p>Three consecutive years of non-filing causes <b>automatic revocation</b> of your 501(c)(3) status. Getting reinstated is painful and costly.</p><h4>Resource</h4><p><a href="https://www.irs.gov/charities-non-profits/annual-electronic-notice-form-990-n-for-small-organizations-faqs-required-filing" target="_blank">IRS Form 990-N FAQs ↗</a></p>` },
+  { id:'f990ez', name:'Form 990-EZ', agency:'IRS', frequency:'Annual', category:'Federal',
+    applies: p => p.orgType==='501c3-public' && (p.revBracket==='small' || p.revBracket==='medium'),
+    dueRule: p => monthsAfterFYE(p, 5),
+    summary:'Short-form annual return. ~4 pages plus schedules.',
+    details:`<h4>Who must file</h4><p>501(c)(3) public charities with gross receipts < $200,000 AND total assets < $500,000.</p><h4>Deadline</h4><p>15th day of the 5th month after fiscal year end. Automatic 6-month extension available via Form 8868.</p><h4>What's included</h4><ul><li>Statement of revenue and expenses</li><li>Balance sheet</li><li>Officer and director compensation</li><li>Program service accomplishments</li><li>Schedule A (public charity status)</li><li>Schedule O (narrative explanations)</li><li>Other schedules as applicable</li></ul><h4>Penalties for late filing</h4><p>$20/day up to lesser of $12,000 or 5% of gross receipts. Larger orgs pay more.</p>` },
+  { id:'f990', name:'Form 990 (Full)', agency:'IRS', frequency:'Annual', category:'Federal',
+    applies: p => p.orgType==='501c3-public' && (p.revBracket==='large' || p.revBracket==='xlarge'),
+    dueRule: p => monthsAfterFYE(p, 5),
+    summary:'Full annual return for larger organizations. 12 pages + extensive schedules.',
+    details:`<h4>Who must file</h4><p>Most 501(c)(3) public charities with gross receipts ≥ $200,000 OR total assets ≥ $500,000.</p><h4>Deadline</h4><p>15th day of the 5th month after fiscal year end. Form 8868 provides automatic 6-month extension.</p><h4>What's involved</h4><p>Form 990 is the IRS's information return — a public-facing document. It includes:</p><ul><li>Mission and program accomplishments</li><li>Compensation of officers, directors, and key employees</li><li>Independent contractor compensation > $100k</li><li>Governance policies (COI, whistleblower, doc retention) — Schedule B not public</li><li>Statement of revenue, expenses, balance sheet</li><li>Reconciliation of net assets</li><li>Schedules: A (public charity status), B (contributors), D (supplemental financial), G (fundraising), I (grants), J (compensation), L (transactions with interested persons), and more depending on activity</li></ul><h4>Public scrutiny</h4><p>Form 990 is freely available on GuideStar/Candid, ProPublica Nonprofit Explorer, and the IRS website. Funders read it.</p>` },
+  { id:'f990pf', name:'Form 990-PF', agency:'IRS', frequency:'Annual', category:'Federal',
+    applies: p => p.orgType==='501c3-pf',
+    dueRule: p => monthsAfterFYE(p, 4),
+    summary:'Annual return for private foundations regardless of revenue.',
+    details:`<h4>Who must file</h4><p>All private foundations.</p><h4>Deadline</h4><p>15th day of the 5th month after fiscal year end (same as 990).</p><h4>Why it's different</h4><p>Private foundations are subject to additional excise taxes and a minimum distribution requirement (5% of assets annually).</p><h4>Common gotchas</h4><ul><li>Self-dealing transactions</li><li>Taxable expenditures</li><li>Failure to meet minimum distribution</li><li>Excess business holdings</li></ul>` },
+  { id:'f990t', name:'Form 990-T (UBIT)', agency:'IRS', frequency:'Annual (if applicable)', category:'Federal',
+    applies: p => true,
+    dueRule: p => monthsAfterFYE(p, 4),
+    summary:'Filed only if your organization has unrelated business income ≥ $1,000.',
+    details:`<h4>What is UBIT?</h4><p>Unrelated Business Income Tax. Activities that are (a) a trade or business, (b) regularly carried on, and (c) not substantially related to your exempt purpose generate UBI — and the income is taxed at corporate rates.</p><h4>Common UBI sources</h4><ul><li>Advertising in newsletters or websites</li><li>Sale of merchandise unrelated to mission</li><li>Rental income from debt-financed property</li><li>Some affinity programs</li></ul><h4>Exemptions</h4><p>Volunteer-run activities, activities for the convenience of members, sale of donated merchandise, royalties, dividends, interest, and most rental income are typically excluded.</p><h4>If your UBI < $1,000</h4><p>You don't need to file. But track it — the threshold is per organization, not per activity.</p>` },
+  { id:'pay941', name:'Form 941 — Quarterly Payroll Tax', agency:'IRS', frequency:'Quarterly', category:'Federal',
+    applies: p => p.staff && p.staff !== 'none',
+    dueRule: p => quarterlyDates(),
+    summary:'Quarterly report of federal income tax, Social Security, and Medicare withheld from wages.',
+    details:`<h4>Deadlines</h4><p>April 30, July 31, October 31, January 31 (for the quarter ending the prior month).</p><h4>What you report</h4><ul><li>Total wages paid</li><li>Federal income tax withheld</li><li>Employer + employee FICA tax</li><li>Adjustments</li></ul><h4>Late penalties</h4><p>Stack quickly: 2% (1–5 days late), 5% (6–15), 10% (16+), 15% (10+ days after IRS notice).</p>` },
+  { id:'payw2', name:'W-2s and W-3', agency:'IRS/SSA', frequency:'Annual', category:'Federal',
+    applies: p => p.staff && p.staff !== 'none',
+    dueRule: p => nextOccurrence(1, 31),
+    summary:'Annual wage statements to employees and Social Security Administration.',
+    details:`<h4>Deadline</h4><p>January 31 — for both employee copies and SSA filing.</p><h4>Penalties</h4><p>$60–$310 per form depending on how late, capped at ~$3.7M for large employers.</p>` },
+  { id:'pay1099', name:'1099-NECs (Contractors)', agency:'IRS', frequency:'Annual', category:'Federal',
+    applies: p => true,
+    dueRule: p => nextOccurrence(1, 31),
+    summary:'Issued to any independent contractor paid $600+ during the year.',
+    details:`<h4>Deadline</h4><p>January 31 (both recipient copies and IRS filing).</p><h4>Common mistake</h4><p>Failing to collect a W-9 before issuing payment. Always get the W-9 up front — it's much harder later.</p>` }
+];
+
+const GOVERNANCE_ITEMS = [
+  { id:'g-boardmeet', name:'Annual Board Meeting', agency:'Internal / State Law', frequency:'Annual (minimum)', category:'Governance',
+    applies: p => true,
+    dueRule: p => monthsAfterFYE(p, 3),
+    summary:'Most states require at least one annual meeting of the board of directors.',
+    details:`<h4>Why it matters</h4><p>State nonprofit corporation acts require annual board meetings. Failure can jeopardize corporate status and personal liability protection for directors.</p><h4>Best practice</h4><ul><li>Hold 4+ board meetings per year; minimum quarterly</li><li>Distribute agenda + financials at least 5 days before</li><li>Approve minutes from prior meeting</li><li>Review financial statements</li><li>Approve annual budget</li><li>Document decisions in minutes</li></ul><h4>Quorum</h4><p>Most bylaws require majority of directors present. Check your bylaws.</p>` },
+  { id:'g-coi', name:'Annual Conflict-of-Interest Disclosures', agency:'Internal', frequency:'Annual', category:'Governance',
+    applies: p => true,
+    dueRule: p => monthsAfterFYE(p, 2),
+    summary:'Each director and key employee signs an annual disclosure of potential conflicts.',
+    details:`<h4>What it is</h4><p>A signed statement from every director, officer, and key employee disclosing any financial or material relationships that could create a conflict with the organization's interests.</p><h4>Form 990 question</h4><p>The IRS asks on Form 990 whether you collect annual COI disclosures. Answering "no" is a red flag.</p><h4>What to disclose</h4><ul><li>Business relationships with vendors, donors, grantees</li><li>Family member employment or contracts with the org</li><li>Service on related-entity boards</li><li>Investment interests in vendors or competitors</li></ul><h4>Process</h4><p>1. Send disclosure form annually (typically at fiscal year start or end).<br>2. Collect signed forms.<br>3. Review with board.<br>4. Recuse interested parties from related votes.<br>5. Document in minutes.</p>` },
+  { id:'g-policy-review', name:'Annual Policy Review', agency:'Internal', frequency:'Annual', category:'Governance',
+    applies: p => true,
+    dueRule: p => monthsAfterFYE(p, 2),
+    summary:'Board reviews COI, whistleblower, document retention, and other key policies.',
+    details:`<h4>Policies to review annually</h4><ul><li><b>Conflict of Interest Policy</b> — Form 990 explicitly asks if you have one</li><li><b>Whistleblower Policy</b> — required if you receive federal funds, recommended otherwise</li><li><b>Document Retention & Destruction Policy</b></li><li><b>Gift Acceptance Policy</b> — what gifts you will and won't accept</li><li><b>Compensation Policy</b> — how executive comp is set</li><li><b>Investment Policy</b> — for orgs with reserves</li></ul><h4>What "review" means</h4><p>Board minutes should reflect that policies were reviewed, any changes adopted, and that the board reaffirms them. Doesn't have to take long — but must be documented.</p>` },
+  { id:'g-do-insurance', name:'D&O Insurance Renewal', agency:'Insurance Carrier', frequency:'Annual', category:'Governance',
+    applies: p => true,
+    dueRule: p => { const d = new Date(); d.setMonth(d.getMonth() + 7); return d; },
+    summary:'Directors & Officers liability insurance — protects board members personally.',
+    details:`<h4>Why it matters</h4><p>Without D&O insurance, directors can be personally liable for organizational decisions even with corporate shield. Most board candidates require D&O coverage before joining.</p><h4>What it covers</h4><ul><li>Employment practices claims (discrimination, harassment)</li><li>Fiduciary duty claims</li><li>Mismanagement allegations</li><li>Regulatory investigations</li></ul><h4>Typical cost</h4><p>$500–$2,500/year for $1M coverage for small nonprofits. Worth every penny.</p>` },
+  { id:'g-audit', name:'Annual Audit or Financial Review', agency:'CPA Firm', frequency:'Annual (if required)', category:'Governance',
+    applies: p => p.revBracket==='large' || p.revBracket==='xlarge',
+    dueRule: p => monthsAfterFYE(p, 6),
+    summary:'Independent CPA audit. Required by many states above revenue thresholds and by major funders.',
+    details:`<h4>When required</h4><ul><li><b>Federal funds:</b> Single Audit if you spend $750k+ in federal awards</li><li><b>State law:</b> Many states require audit above $500k–$2M in revenue. See your state's rules.</li><li><b>Bylaws:</b> Some bylaws require annual audit regardless</li><li><b>Funders:</b> Major foundations and corporate funders often require audited financials</li></ul><h4>Cost</h4><p>$8,000–$25,000 for a small/mid nonprofit. Budget for it in advance.</p><h4>Timeline</h4><p>Fieldwork: 1–2 weeks. Total turnaround: 3–6 months. Plan to issue audited financials within 6 months of fiscal year end.</p>` },
+  { id:'g-minutes', name:'Board Meeting Minutes', agency:'Internal', frequency:'Per meeting', category:'Governance',
+    applies: p => true,
+    dueRule: p => { const d = new Date(); d.setMonth(d.getMonth() + 3); return d; },
+    summary:'Approved minutes for every board meeting are part of your permanent records.',
+    details:`<h4>What to include</h4><ul><li>Date, time, location (or virtual platform)</li><li>Members present and absent</li><li>Quorum confirmation</li><li>Decisions made — record exact motion, who moved/seconded, vote count</li><li>Reports given</li><li>Action items with owners and deadlines</li><li>Next meeting date</li><li>Adjournment time</li></ul><h4>What NOT to include</h4><p>Don't transcribe discussion verbatim. Minutes are a record of <b>decisions</b>, not a transcript. Avoid editorial comments; stick to facts.</p><h4>Approval</h4><p>Minutes from one meeting are approved at the next. Once approved, they're official records.</p>` }
+];
+
+// State-specific items. Each state has annual report + charitable registration.
+// Plus audit thresholds where applicable.
+const STATE_ITEMS = {
+  AL: [
+    {
+      id: 'al-corp-1',
+      name: `AL Business Privilege Tax Return`,
+      agency: `AL Dept. of Revenue`,
+      frequency: `Annual`,
+      summary: `Alabama corporate filing. Fee: See agency. Due: Anniversary.`,
+      details: `<h4>Filing</h4><p>Business Privilege Tax Return</p><h4>Agency</h4><p>AL Dept. of Revenue</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.alabama.gov" target="_blank">sos.alabama.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'al-charity-reg',
+      name: `AL Charitable Solicitation Registration Renewal`,
+      agency: `AL Attorney General`,
+      frequency: `Annual`,
+      summary: `Alabama requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>AL Attorney General</p><h4>Initial fee</h4><p>$25</p><h4>Annual renewal</h4><p>Annual $25</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  AK: [
+    {
+      id: 'ak-corp-1',
+      name: `AK Biennial Report`,
+      agency: `AK DCCED`,
+      frequency: `Biennial`,
+      summary: `Alaska corporate filing. Fee: $25. Due: January 2.`,
+      details: `<h4>Filing</h4><p>Biennial Report</p><h4>Agency</h4><p>AK DCCED</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>January 2</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://commerce.alaska.gov/cbp" target="_blank">commerce.alaska.gov/cbp ↗</a></p>`,
+      dueRule: p => nextOccurrence(1, 2)
+    },
+    {
+      id: 'ak-charity-reg',
+      name: `AK Charitable Solicitation Registration Renewal`,
+      agency: `AK Department of Law`,
+      frequency: `Annual`,
+      summary: `Alaska requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>AK Department of Law</p><h4>Initial fee</h4><p>$40</p><h4>Annual renewal</h4><p>Annual $40</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>None specified</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  AZ: [
+    {
+      id: 'az-corp-1',
+      name: `AZ Annual Report`,
+      agency: `AZ Corp. Commission`,
+      frequency: `Annual`,
+      summary: `Arizona corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>AZ Corp. Commission</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://ecorp.azcc.gov" target="_blank">ecorp.azcc.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  AR: [
+    {
+      id: 'ar-corp-1',
+      name: `AR Franchise Tax Report (free)`,
+      agency: `AR SOS`,
+      frequency: `Annual`,
+      summary: `Arkansas corporate filing. Fee: See agency. Due: August 1.`,
+      details: `<h4>Filing</h4><p>Franchise Tax Report (free)</p><h4>Agency</h4><p>AR SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>August 1</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.arkansas.gov" target="_blank">sos.arkansas.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(8, 1)
+    },
+    {
+      id: 'ar-charity-reg',
+      name: `AR Charitable Solicitation Registration Renewal`,
+      agency: `AR Attorney General`,
+      frequency: `Annual`,
+      summary: `Arkansas requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>AR Attorney General</p><h4>Initial fee</h4><p>$0</p><h4>Annual renewal</h4><p>Annual $0</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  CA: [
+    {
+      id: 'ca-corp-1',
+      name: `CA Statement of Information`,
+      agency: `CA SOS`,
+      frequency: `Biennial`,
+      summary: `California corporate filing. Fee: $20. Due: Anniversary biennial.`,
+      details: `<h4>Filing</h4><p>Statement of Information</p><h4>Agency</h4><p>CA SOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Anniversary biennial</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://bizfileonline.sos.ca.gov" target="_blank">bizfileonline.sos.ca.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'ca-charity-cal',
+      name: `CA RRF-1 Charitable Renewal`,
+      agency: `CA AG`,
+      frequency: `Annual`,
+      summary: `California charitable filing. Due: 4 mo. 15 days after FYE.`,
+      details: `<h4>Filing</h4><p>RRF-1 Charitable Renewal</p><h4>Agency</h4><p>CA AG</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>4 mo. 15 days after FYE</p><h4>Registration trigger</h4><p>Within 30 days of receiving property</p><h4>Initial fee</h4><p>$50</p><h4>Annual fee</h4><p>$25-$300 RRF-1</p><h4>Accepts URS?</h4><p>No (state form req'd)</p><h4>Audit threshold</h4><p>$2,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 4)
+    },
+  ],
+  CO: [
+    {
+      id: 'co-corp-1',
+      name: `CO Periodic Report`,
+      agency: `CO SOS`,
+      frequency: `Annual`,
+      summary: `Colorado corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Periodic Report</p><h4>Agency</h4><p>CO SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://coloradosos.gov" target="_blank">coloradosos.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'co-charity-reg',
+      name: `CO Charitable Solicitation Registration Renewal`,
+      agency: `CO Secretary of State`,
+      frequency: `Annual`,
+      summary: `Colorado requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>CO Secretary of State</p><h4>Initial fee</h4><p>$10</p><h4>Annual renewal</h4><p>Annual $10</p><h4>Accepts URS</h4><p>No (online only)</p><h4>Audit threshold</h4><p>None specified</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  CT: [
+    {
+      id: 'ct-corp-1',
+      name: `CT Annual Report`,
+      agency: `CT SOS`,
+      frequency: `Annual`,
+      summary: `Connecticut corporate filing. Fee: $50. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>CT SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$50</p><h4>Where to file</h4><p><a href="https://business.ct.gov" target="_blank">business.ct.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'ct-charity-reg',
+      name: `CT Charitable Solicitation Registration Renewal`,
+      agency: `CT Dept. of Consumer Protection`,
+      frequency: `Annual`,
+      summary: `Connecticut requires registration before soliciting donations. Gross revenue >$50,000 OR paid solicitor`,
+      details: `<h4>Required</h4><p>Gross revenue >$50,000 OR paid solicitor</p><h4>Regulator</h4><p>CT Dept. of Consumer Protection</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  DE: [
+    {
+      id: 'de-corp-1',
+      name: `DE Annual Report`,
+      agency: `DE Div. of Corps.`,
+      frequency: `Annual`,
+      summary: `Delaware corporate filing. Fee: $25. Due: March 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>DE Div. of Corps.</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>March 1</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://corp.delaware.gov" target="_blank">corp.delaware.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(3, 1)
+    },
+    {
+      id: 'de-charity-reg',
+      name: `DE Charitable Solicitation Registration Renewal`,
+      agency: `DE Attorney General`,
+      frequency: `Annual`,
+      summary: `Delaware requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>DE Attorney General</p><h4>Initial fee</h4><p>$0</p><h4>Annual renewal</h4><p>Annual $0</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>None</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  FL: [
+    {
+      id: 'fl-corp-1',
+      name: `FL Annual Report`,
+      agency: `FL Sunbiz`,
+      frequency: `Annual`,
+      summary: `Florida corporate filing. Fee: $61.25. Due: May 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>FL Sunbiz</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>May 1</p><h4>Fee</h4><p>$61.25</p><h4>Where to file</h4><p><a href="https://sunbiz.org" target="_blank">sunbiz.org ↗</a></p>`,
+      dueRule: p => nextOccurrence(5, 1)
+    },
+    {
+      id: 'fl-charity-cal',
+      name: `FL Charitable Solicitation Renewal`,
+      agency: `FDACS`,
+      frequency: `Annual`,
+      summary: `Florida charitable filing. Due: Anniversary.`,
+      details: `<h4>Filing</h4><p>Charitable Solicitation Renewal</p><h4>Agency</h4><p>FDACS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary</p><h4>Registration trigger</h4><p>All soliciting orgs (limited exemptions)</p><h4>Initial fee</h4><p>$10-$400</p><h4>Annual fee</h4><p>Annual $10-$400</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  GA: [
+    {
+      id: 'ga-corp-1',
+      name: `GA Annual Registration`,
+      agency: `GA SOS`,
+      frequency: `Annual`,
+      summary: `Georgia corporate filing. Fee: $30. Due: April 1.`,
+      details: `<h4>Filing</h4><p>Annual Registration</p><h4>Agency</h4><p>GA SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>April 1</p><h4>Fee</h4><p>$30</p><h4>Where to file</h4><p><a href="https://ecorp.sos.ga.gov" target="_blank">ecorp.sos.ga.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(4, 1)
+    },
+    {
+      id: 'ga-charity-reg',
+      name: `GA Charitable Solicitation Registration Renewal`,
+      agency: `GA Secretary of State`,
+      frequency: `Annual`,
+      summary: `Georgia requires registration before soliciting donations. Gross contributions >$25,000 (or paid solicitor)`,
+      details: `<h4>Required</h4><p>Gross contributions >$25,000 (or paid solicitor)</p><h4>Regulator</h4><p>GA Secretary of State</p><h4>Initial fee</h4><p>$35</p><h4>Annual renewal</h4><p>Annual $35</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  HI: [
+    {
+      id: 'hi-corp-1',
+      name: `HI Annual Report`,
+      agency: `HI DCCA`,
+      frequency: `Annual`,
+      summary: `Hawaii corporate filing. Fee: $5. Due: Anniversary quarter.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>HI DCCA</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary quarter</p><h4>Fee</h4><p>$5</p><h4>Where to file</h4><p><a href="https://cca.hawaii.gov/breg" target="_blank">cca.hawaii.gov/breg ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'hi-charity-reg',
+      name: `HI Charitable Solicitation Registration Renewal`,
+      agency: `HI Attorney General Tax & Charities`,
+      frequency: `Annual`,
+      summary: `Hawaii requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>HI Attorney General Tax & Charities</p><h4>Initial fee</h4><p>$0-$600</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  ID: [
+    {
+      id: 'id-corp-1',
+      name: `ID Annual Report (free)`,
+      agency: `ID SOS`,
+      frequency: `Annual`,
+      summary: `Idaho corporate filing. Fee: See agency. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report (free)</p><h4>Agency</h4><p>ID SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sosbiz.idaho.gov" target="_blank">sosbiz.idaho.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  IL: [
+    {
+      id: 'il-corp-1',
+      name: `IL Annual Report`,
+      agency: `IL SOS`,
+      frequency: `Annual`,
+      summary: `Illinois corporate filing. Fee: $10. Due: Before anniv. month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>IL SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Before anniv. month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://ilsos.gov" target="_blank">ilsos.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'il-charity-cal',
+      name: `IL AG-990-IL Charitable Report`,
+      agency: `IL AG`,
+      frequency: `Annual`,
+      summary: `Illinois charitable filing. Due: 6 mo. after FYE.`,
+      details: `<h4>Filing</h4><p>AG-990-IL Charitable Report</p><h4>Agency</h4><p>IL AG</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>6 mo. after FYE</p><h4>Registration trigger</h4><p>All charitable orgs</p><h4>Initial fee</h4><p>$15</p><h4>Annual fee</h4><p>Annual $15 (AG-990-IL)</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$300,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  IN: [
+    {
+      id: 'in-corp-1',
+      name: `IN Business Entity Report`,
+      agency: `IN SOS`,
+      frequency: `Biennial`,
+      summary: `Indiana corporate filing. Fee: $22. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Business Entity Report</p><h4>Agency</h4><p>IN SOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$22</p><h4>Where to file</h4><p><a href="https://inbiz.in.gov" target="_blank">inbiz.in.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  IA: [
+    {
+      id: 'ia-corp-1',
+      name: `IA Biennial Report`,
+      agency: `IA SOS`,
+      frequency: `Biennial`,
+      summary: `Iowa corporate filing. Fee: $10. Due: Jan 1 - Apr 1.`,
+      details: `<h4>Filing</h4><p>Biennial Report</p><h4>Agency</h4><p>IA SOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Jan 1 - Apr 1</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://sos.iowa.gov" target="_blank">sos.iowa.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(1, 1)
+    },
+  ],
+  KS: [
+    {
+      id: 'ks-corp-1',
+      name: `KS Annual Report`,
+      agency: `KS SOS`,
+      frequency: `Annual`,
+      summary: `Kansas corporate filing. Fee: $40. Due: 5th month after FYE.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>KS SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>5th month after FYE</p><h4>Fee</h4><p>$40</p><h4>Where to file</h4><p><a href="https://sos.ks.gov" target="_blank">sos.ks.gov ↗</a></p>`,
+      dueRule: p => monthsAfterFYE(p, 5)
+    },
+    {
+      id: 'ks-charity-reg',
+      name: `KS Charitable Solicitation Registration Renewal`,
+      agency: `KS Secretary of State`,
+      frequency: `Annual`,
+      summary: `Kansas requires registration before soliciting donations. Contributions >$10,000 OR paid solicitor`,
+      details: `<h4>Required</h4><p>Contributions >$10,000 OR paid solicitor</p><h4>Regulator</h4><p>KS Secretary of State</p><h4>Initial fee</h4><p>$35</p><h4>Annual renewal</h4><p>Annual $35</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  KY: [
+    {
+      id: 'ky-corp-1',
+      name: `KY Annual Report`,
+      agency: `KY SOS`,
+      frequency: `Annual`,
+      summary: `Kentucky corporate filing. Fee: $15. Due: June 30.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>KY SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>June 30</p><h4>Fee</h4><p>$15</p><h4>Where to file</h4><p><a href="https://sos.ky.gov" target="_blank">sos.ky.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(6, 30)
+    },
+    {
+      id: 'ky-charity-reg',
+      name: `KY Charitable Solicitation Registration Renewal`,
+      agency: `KY Attorney General`,
+      frequency: `Annual`,
+      summary: `Kentucky requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>KY Attorney General</p><h4>Initial fee</h4><p>$0</p><h4>Annual renewal</h4><p>Annual $0</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  LA: [
+    {
+      id: 'la-corp-1',
+      name: `LA Annual Report`,
+      agency: `LA SOS`,
+      frequency: `Annual`,
+      summary: `Louisiana corporate filing. Fee: $10. Due: Anniversary date.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>LA SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary date</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://geauxbiz.sos.la.gov" target="_blank">geauxbiz.sos.la.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'la-charity-reg',
+      name: `LA Charitable Solicitation Registration Renewal`,
+      agency: `LA Department of Justice`,
+      frequency: `Annual`,
+      summary: `Louisiana requires registration before soliciting donations. All soliciting orgs (with exemptions)`,
+      details: `<h4>Required</h4><p>All soliciting orgs (with exemptions)</p><h4>Regulator</h4><p>LA Department of Justice</p><h4>Initial fee</h4><p>$25</p><h4>Annual renewal</h4><p>Annual $25</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  ME: [
+    {
+      id: 'me-corp-1',
+      name: `ME Annual Report`,
+      agency: `ME SOS`,
+      frequency: `Annual`,
+      summary: `Maine corporate filing. Fee: $35. Due: June 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>ME SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>June 1</p><h4>Fee</h4><p>$35</p><h4>Where to file</h4><p><a href="https://maine.gov/sos/cec" target="_blank">maine.gov/sos/cec ↗</a></p>`,
+      dueRule: p => nextOccurrence(6, 1)
+    },
+    {
+      id: 'me-charity-reg',
+      name: `ME Charitable Solicitation Registration Renewal`,
+      agency: `ME Office of Prof. & Occup. Reg.`,
+      frequency: `Annual`,
+      summary: `Maine requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>ME Office of Prof. & Occup. Reg.</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  MD: [
+    {
+      id: 'md-corp-1',
+      name: `MD Annual Report + Personal Property`,
+      agency: `MD SDAT`,
+      frequency: `Annual`,
+      summary: `Maryland corporate filing. Fee: See agency. Due: April 15.`,
+      details: `<h4>Filing</h4><p>Annual Report + Personal Property</p><h4>Agency</h4><p>MD SDAT</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>April 15</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://egov.maryland.gov/businessexpress" target="_blank">egov.maryland.gov/businessexpress ↗</a></p>`,
+      dueRule: p => nextOccurrence(4, 15)
+    },
+    {
+      id: 'md-charity-reg',
+      name: `MD Charitable Solicitation Registration Renewal`,
+      agency: `MD Secretary of State`,
+      frequency: `Annual`,
+      summary: `Maryland requires registration before soliciting donations. Charitable contributions >$25,000`,
+      details: `<h4>Required</h4><p>Charitable contributions >$25,000</p><h4>Regulator</h4><p>MD Secretary of State</p><h4>Initial fee</h4><p>$0-$300</p><h4>Annual renewal</h4><p>Annual $0-$300</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$750,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  MA: [
+    {
+      id: 'ma-corp-1',
+      name: `MA Annual Report`,
+      agency: `MA SOC`,
+      frequency: `Annual`,
+      summary: `Massachusetts corporate filing. Fee: $15. Due: November 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>MA SOC</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>November 1</p><h4>Fee</h4><p>$15</p><h4>Where to file</h4><p><a href="https://corp.sec.state.ma.us" target="_blank">corp.sec.state.ma.us ↗</a></p>`,
+      dueRule: p => nextOccurrence(11, 1)
+    },
+    {
+      id: 'ma-charity-cal',
+      name: `MA Form PC Charitable Filing`,
+      agency: `MA AG`,
+      frequency: `Annual`,
+      summary: `Massachusetts charitable filing. Due: 4.5 months after FYE.`,
+      details: `<h4>Filing</h4><p>Form PC Charitable Filing</p><h4>Agency</h4><p>MA AG</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>4.5 months after FYE</p><h4>Registration trigger</h4><p>All public charities (Form PC)</p><h4>Initial fee</h4><p>$50-$2,000</p><h4>Annual fee</h4><p>Annual based on revenue</p><h4>Accepts URS?</h4><p>No (Form PC req'd)</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 4)
+    },
+  ],
+  MI: [
+    {
+      id: 'mi-corp-1',
+      name: `MI Annual Statement`,
+      agency: `MI LARA`,
+      frequency: `Annual`,
+      summary: `Michigan corporate filing. Fee: $20. Due: October 1.`,
+      details: `<h4>Filing</h4><p>Annual Statement</p><h4>Agency</h4><p>MI LARA</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>October 1</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://michigan.gov/lara" target="_blank">michigan.gov/lara ↗</a></p>`,
+      dueRule: p => nextOccurrence(10, 1)
+    },
+    {
+      id: 'mi-charity-cal',
+      name: `MI CTS-02 Charitable Renewal`,
+      agency: `MI AG`,
+      frequency: `Annual`,
+      summary: `Michigan charitable filing. Due: 5 months after FYE.`,
+      details: `<h4>Filing</h4><p>CTS-02 Charitable Renewal</p><h4>Agency</h4><p>MI AG</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>5 months after FYE</p><h4>Registration trigger</h4><p>Contributions >$25,000 OR uses paid solicitor</p><h4>Initial fee</h4><p>$0</p><h4>Annual fee</h4><p>Annual $0 (CTS-02)</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$525,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 5)
+    },
+  ],
+  MN: [
+    {
+      id: 'mn-corp-1',
+      name: `MN Annual Renewal (free if on time)`,
+      agency: `MN SOS`,
+      frequency: `Annual`,
+      summary: `Minnesota corporate filing. Fee: See agency. Due: December 31.`,
+      details: `<h4>Filing</h4><p>Annual Renewal (free if on time)</p><h4>Agency</h4><p>MN SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>December 31</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.state.mn.us" target="_blank">sos.state.mn.us ↗</a></p>`,
+      dueRule: p => nextOccurrence(12, 31)
+    },
+    {
+      id: 'mn-charity-reg',
+      name: `MN Charitable Solicitation Registration Renewal`,
+      agency: `MN Attorney General Charities`,
+      frequency: `Annual`,
+      summary: `Minnesota requires registration before soliciting donations. Contributions >$25,000 OR paid solicitor`,
+      details: `<h4>Required</h4><p>Contributions >$25,000 OR paid solicitor</p><h4>Regulator</h4><p>MN Attorney General Charities</p><h4>Initial fee</h4><p>$25</p><h4>Annual renewal</h4><p>Annual $25</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$750,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  MS: [
+    {
+      id: 'ms-corp-1',
+      name: `MS Annual Report (free)`,
+      agency: `MS SOS`,
+      frequency: `Annual`,
+      summary: `Mississippi corporate filing. Fee: See agency. Due: April 15.`,
+      details: `<h4>Filing</h4><p>Annual Report (free)</p><h4>Agency</h4><p>MS SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>April 15</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.ms.gov" target="_blank">sos.ms.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(4, 15)
+    },
+    {
+      id: 'ms-charity-reg',
+      name: `MS Charitable Solicitation Registration Renewal`,
+      agency: `MS Secretary of State Charities`,
+      frequency: `Annual`,
+      summary: `Mississippi requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>MS Secretary of State Charities</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  MO: [
+    {
+      id: 'mo-corp-1',
+      name: `MO Annual Report`,
+      agency: `MO SOS`,
+      frequency: `Annual`,
+      summary: `Missouri corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>MO SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://sos.mo.gov/business" target="_blank">sos.mo.gov/business ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'mo-charity-reg',
+      name: `MO Charitable Solicitation Registration Renewal`,
+      agency: `MO Attorney General`,
+      frequency: `Annual`,
+      summary: `Missouri requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>MO Attorney General</p><h4>Initial fee</h4><p>$15</p><h4>Annual renewal</h4><p>Annual $15</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>None specified</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  MT: [
+    {
+      id: 'mt-corp-1',
+      name: `MT Annual Report`,
+      agency: `MT SOS`,
+      frequency: `Annual`,
+      summary: `Montana corporate filing. Fee: $20. Due: April 15.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>MT SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>April 15</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://sosmt.gov" target="_blank">sosmt.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(4, 15)
+    },
+  ],
+  NE: [
+    {
+      id: 'ne-corp-1',
+      name: `NE Biennial Report`,
+      agency: `NE SOS`,
+      frequency: `Biennial`,
+      summary: `Nebraska corporate filing. Fee: $25. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Biennial Report</p><h4>Agency</h4><p>NE SOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://sos.nebraska.gov" target="_blank">sos.nebraska.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  NV: [
+    {
+      id: 'nv-corp-1',
+      name: `NV List of Officers`,
+      agency: `NV SOS`,
+      frequency: `Annual`,
+      summary: `Nevada corporate filing. Fee: $50. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>List of Officers</p><h4>Agency</h4><p>NV SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$50</p><h4>Where to file</h4><p><a href="https://nvsos.gov" target="_blank">nvsos.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'nv-charity-reg',
+      name: `NV Charitable Solicitation Registration Renewal`,
+      agency: `NV Secretary of State`,
+      frequency: `Annual`,
+      summary: `Nevada requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>NV Secretary of State</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>No (state form req'd)</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  NH: [
+    {
+      id: 'nh-corp-1',
+      name: `NH Form NP-5`,
+      agency: `NH SOS`,
+      frequency: `Every 5 years`,
+      summary: `New Hampshire corporate filing. Fee: $25. Due: Every 5 years.`,
+      details: `<h4>Filing</h4><p>Form NP-5</p><h4>Agency</h4><p>NH SOS</p><h4>Frequency</h4><p>Every 5 years</p><h4>Due</h4><p>Every 5 years</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://sos.nh.gov" target="_blank">sos.nh.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setFullYear(d.getFullYear()+5); return d; }
+    },
+    {
+      id: 'nh-charity-reg',
+      name: `NH Charitable Solicitation Registration Renewal`,
+      agency: `NH Attorney General Charitable Trusts`,
+      frequency: `Annual`,
+      summary: `New Hampshire requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>NH Attorney General Charitable Trusts</p><h4>Initial fee</h4><p>$25</p><h4>Annual renewal</h4><p>Annual $75</p><h4>Accepts URS</h4><p>No (state form req'd)</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  NJ: [
+    {
+      id: 'nj-corp-1',
+      name: `NJ Annual Report`,
+      agency: `NJ Treasury`,
+      frequency: `Annual`,
+      summary: `New Jersey corporate filing. Fee: $30. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>NJ Treasury</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$30</p><h4>Where to file</h4><p><a href="https://nj.gov/treasury/revenue" target="_blank">nj.gov/treasury/revenue ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'nj-charity-reg',
+      name: `NJ Charitable Solicitation Registration Renewal`,
+      agency: `NJ Division of Consumer Affairs`,
+      frequency: `Annual`,
+      summary: `New Jersey requires registration before soliciting donations. All soliciting orgs (limited exempt)`,
+      details: `<h4>Required</h4><p>All soliciting orgs (limited exempt)</p><h4>Regulator</h4><p>NJ Division of Consumer Affairs</p><h4>Initial fee</h4><p>$30-$250</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  NM: [
+    {
+      id: 'nm-corp-1',
+      name: `NM Annual + Supplemental Report`,
+      agency: `NM SOS`,
+      frequency: `Annual`,
+      summary: `New Mexico corporate filing. Fee: See agency. Due: 5th month after FYE.`,
+      details: `<h4>Filing</h4><p>Annual + Supplemental Report</p><h4>Agency</h4><p>NM SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>5th month after FYE</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.nm.gov" target="_blank">sos.nm.gov ↗</a></p>`,
+      dueRule: p => monthsAfterFYE(p, 5)
+    },
+    {
+      id: 'nm-charity-reg',
+      name: `NM Charitable Solicitation Registration Renewal`,
+      agency: `NM Attorney General`,
+      frequency: `Annual`,
+      summary: `New Mexico requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>NM Attorney General</p><h4>Initial fee</h4><p>$0</p><h4>Annual renewal</h4><p>Annual $0</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  NY: [
+    {
+      id: 'ny-corp-1',
+      name: `NY Biennial Statement`,
+      agency: `NY DOS`,
+      frequency: `Biennial`,
+      summary: `New York corporate filing. Fee: $9. Due: Anniversary biennial.`,
+      details: `<h4>Filing</h4><p>Biennial Statement</p><h4>Agency</h4><p>NY DOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Anniversary biennial</p><h4>Fee</h4><p>$9</p><h4>Where to file</h4><p><a href="https://dos.ny.gov/corps" target="_blank">dos.ny.gov/corps ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'ny-charity-cal',
+      name: `NY CHAR500 Charitable Filing`,
+      agency: `NY AG`,
+      frequency: `Annual`,
+      summary: `New York charitable filing. Due: 4.5 months after FYE.`,
+      details: `<h4>Filing</h4><p>CHAR500 Charitable Filing</p><h4>Agency</h4><p>NY AG</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>4.5 months after FYE</p><h4>Registration trigger</h4><p>All soliciting orgs (CHAR410)</p><h4>Initial fee</h4><p>$25</p><h4>Annual fee</h4><p>Annual CHAR500 $10-$1,500</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000 (audit) / $250k (review)</p>`,
+      dueRule: p => monthsAfterFYE(p, 4)
+    },
+  ],
+  NC: [
+    {
+      id: 'nc-charity-reg',
+      name: `NC Charitable Solicitation Registration Renewal`,
+      agency: `NC SOS Charitable Solicitation Licensing`,
+      frequency: `Annual`,
+      summary: `North Carolina requires registration before soliciting donations. Contributions >$25,000`,
+      details: `<h4>Required</h4><p>Contributions >$25,000</p><h4>Regulator</h4><p>NC SOS Charitable Solicitation Licensing</p><h4>Initial fee</h4><p>$0-$200</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  ND: [
+    {
+      id: 'nd-corp-1',
+      name: `ND Annual Report`,
+      agency: `ND SOS`,
+      frequency: `Annual`,
+      summary: `North Dakota corporate filing. Fee: $10. Due: February 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>ND SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>February 1</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://sos.nd.gov" target="_blank">sos.nd.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(2, 1)
+    },
+    {
+      id: 'nd-charity-reg',
+      name: `ND Charitable Solicitation Registration Renewal`,
+      agency: `ND Secretary of State`,
+      frequency: `Annual`,
+      summary: `North Dakota requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>ND Secretary of State</p><h4>Initial fee</h4><p>$25</p><h4>Annual renewal</h4><p>Annual $10</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>None specified</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  OH: [
+    {
+      id: 'oh-corp-1',
+      name: `OH Statement of Continued Existence`,
+      agency: `OH SOS`,
+      frequency: `Every 5 years`,
+      summary: `Ohio corporate filing. Fee: $25. Due: Every 5 years.`,
+      details: `<h4>Filing</h4><p>Statement of Continued Existence</p><h4>Agency</h4><p>OH SOS</p><h4>Frequency</h4><p>Every 5 years</p><h4>Due</h4><p>Every 5 years</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://ohiosos.gov" target="_blank">ohiosos.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setFullYear(d.getFullYear()+5); return d; }
+    },
+    {
+      id: 'oh-charity-reg',
+      name: `OH Charitable Solicitation Registration Renewal`,
+      agency: `OH Attorney General Charitable Law`,
+      frequency: `Annual`,
+      summary: `Ohio requires registration before soliciting donations. All charitable orgs`,
+      details: `<h4>Required</h4><p>All charitable orgs</p><h4>Regulator</h4><p>OH Attorney General Charitable Law</p><h4>Initial fee</h4><p>$0-$200</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  OK: [
+    {
+      id: 'ok-corp-1',
+      name: `OK Annual Certificate`,
+      agency: `OK SOS`,
+      frequency: `Annual`,
+      summary: `Oklahoma corporate filing. Fee: $25. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Certificate</p><h4>Agency</h4><p>OK SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://sos.ok.gov" target="_blank">sos.ok.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'ok-charity-reg',
+      name: `OK Charitable Solicitation Registration Renewal`,
+      agency: `OK Secretary of State`,
+      frequency: `Annual`,
+      summary: `Oklahoma requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>OK Secretary of State</p><h4>Initial fee</h4><p>$15</p><h4>Annual renewal</h4><p>Annual $15</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  OR: [
+    {
+      id: 'or-corp-1',
+      name: `OR Annual Report`,
+      agency: `OR SOS`,
+      frequency: `Annual`,
+      summary: `Oregon corporate filing. Fee: $50. Due: Anniversary date.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>OR SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary date</p><h4>Fee</h4><p>$50</p><h4>Where to file</h4><p><a href="https://sos.oregon.gov/business" target="_blank">sos.oregon.gov/business ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'or-charity-cal',
+      name: `OR RF-C Charitable Renewal`,
+      agency: `OR DOJ`,
+      frequency: `Annual`,
+      summary: `Oregon charitable filing. Due: 4.5 months after FYE.`,
+      details: `<h4>Filing</h4><p>RF-C Charitable Renewal</p><h4>Agency</h4><p>OR DOJ</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>4.5 months after FYE</p><h4>Registration trigger</h4><p>Within 30 days of receiving property</p><h4>Initial fee</h4><p>$0-$200</p><h4>Annual fee</h4><p>Annual based on revenue (RF-C)</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 4)
+    },
+  ],
+  PA: [
+    {
+      id: 'pa-corp-1',
+      name: `PA Decennial Report`,
+      agency: `PA DOS`,
+      frequency: `Every 10 years`,
+      summary: `Pennsylvania corporate filing. Fee: $70. Due: Every 10 years.`,
+      details: `<h4>Filing</h4><p>Decennial Report</p><h4>Agency</h4><p>PA DOS</p><h4>Frequency</h4><p>Every 10 years</p><h4>Due</h4><p>Every 10 years</p><h4>Fee</h4><p>$70</p><h4>Where to file</h4><p><a href="https://dos.pa.gov" target="_blank">dos.pa.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setFullYear(d.getFullYear()+10); return d; }
+    },
+    {
+      id: 'pa-charity-cal',
+      name: `PA BCO-10 Charitable Renewal`,
+      agency: `PA BCCO`,
+      frequency: `Annual`,
+      summary: `Pennsylvania charitable filing. Due: 10.5 months after FYE.`,
+      details: `<h4>Filing</h4><p>BCO-10 Charitable Renewal</p><h4>Agency</h4><p>PA BCCO</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>10.5 months after FYE</p><h4>Registration trigger</h4><p>Contributions >$25,000 OR paid solicitor</p><h4>Initial fee</h4><p>$15-$250</p><h4>Annual fee</h4><p>Annual BCO-10</p><h4>Accepts URS?</h4><p>Yes</p><h4>Audit threshold</h4><p>$750,000 (audit) / $250k (review)</p>`,
+      dueRule: p => monthsAfterFYE(p, 10)
+    },
+  ],
+  RI: [
+    {
+      id: 'ri-corp-1',
+      name: `RI Annual Report`,
+      agency: `RI SOS`,
+      frequency: `Annual`,
+      summary: `Rhode Island corporate filing. Fee: $20. Due: June 1 - June 30.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>RI SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>June 1 - June 30</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://sos.ri.gov" target="_blank">sos.ri.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(6, 1)
+    },
+    {
+      id: 'ri-charity-reg',
+      name: `RI Charitable Solicitation Registration Renewal`,
+      agency: `RI Dept. of Business Reg. Securities Div.`,
+      frequency: `Annual`,
+      summary: `Rhode Island requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>RI Dept. of Business Reg. Securities Div.</p><h4>Initial fee</h4><p>$90</p><h4>Annual renewal</h4><p>Annual $90</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  SC: [
+    {
+      id: 'sc-charity-reg',
+      name: `SC Charitable Solicitation Registration Renewal`,
+      agency: `SC Secretary of State Public Charities`,
+      frequency: `Annual`,
+      summary: `South Carolina requires registration before soliciting donations. All charitable orgs`,
+      details: `<h4>Required</h4><p>All charitable orgs</p><h4>Regulator</h4><p>SC Secretary of State Public Charities</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  SD: [
+    {
+      id: 'sd-corp-1',
+      name: `SD Annual Report`,
+      agency: `SD SOS`,
+      frequency: `Annual`,
+      summary: `South Dakota corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>SD SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://sosenterprise.sd.gov" target="_blank">sosenterprise.sd.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  TN: [
+    {
+      id: 'tn-corp-1',
+      name: `TN Annual Report`,
+      agency: `TN SOS`,
+      frequency: `Annual`,
+      summary: `Tennessee corporate filing. Fee: $20. Due: 4th month after FYE.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>TN SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>4th month after FYE</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://tnbear.tn.gov" target="_blank">tnbear.tn.gov ↗</a></p>`,
+      dueRule: p => monthsAfterFYE(p, 4)
+    },
+    {
+      id: 'tn-charity-reg',
+      name: `TN Charitable Solicitation Registration Renewal`,
+      agency: `TN Secretary of State Charitable Solicitations`,
+      frequency: `Annual`,
+      summary: `Tennessee requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>TN Secretary of State Charitable Solicitations</p><h4>Initial fee</h4><p>$50</p><h4>Annual renewal</h4><p>Annual $50</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  TX: [
+    {
+      id: 'tx-corp-1',
+      name: `TX Periodic Report`,
+      agency: `TX SOS`,
+      frequency: `Every 4 years`,
+      summary: `Texas corporate filing. Fee: $5. Due: Every 4 years.`,
+      details: `<h4>Filing</h4><p>Periodic Report</p><h4>Agency</h4><p>TX SOS</p><h4>Frequency</h4><p>Every 4 years</p><h4>Due</h4><p>Every 4 years</p><h4>Fee</h4><p>$5</p><h4>Where to file</h4><p><a href="https://sos.state.tx.us/corp" target="_blank">sos.state.tx.us/corp ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setFullYear(d.getFullYear()+4); return d; }
+    },
+    {
+      id: 'tx-corp-2',
+      name: `TX Public Information Report`,
+      agency: `TX Comptroller`,
+      frequency: `Annual`,
+      summary: `Texas corporate filing. Fee: See agency. Due: May 15.`,
+      details: `<h4>Filing</h4><p>Public Information Report</p><h4>Agency</h4><p>TX Comptroller</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>May 15</p><h4>Fee</h4><p>See agency</p><h4>Where to file</h4><p><a href="https://sos.state.tx.us/corp" target="_blank">sos.state.tx.us/corp ↗</a></p>`,
+      dueRule: p => nextOccurrence(5, 15)
+    },
+  ],
+  UT: [
+    {
+      id: 'ut-corp-1',
+      name: `UT Annual Renewal`,
+      agency: `UT Div. Corps.`,
+      frequency: `Annual`,
+      summary: `Utah corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Renewal</p><h4>Agency</h4><p>UT Div. Corps.</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://corporations.utah.gov" target="_blank">corporations.utah.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'ut-charity-reg',
+      name: `UT Charitable Solicitation Registration Renewal`,
+      agency: `UT Division of Consumer Protection`,
+      frequency: `Annual`,
+      summary: `Utah requires registration before soliciting donations. All soliciting orgs`,
+      details: `<h4>Required</h4><p>All soliciting orgs</p><h4>Regulator</h4><p>UT Division of Consumer Protection</p><h4>Initial fee</h4><p>$100</p><h4>Annual renewal</h4><p>Annual $100</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>None specified</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  VT: [
+    {
+      id: 'vt-corp-1',
+      name: `VT Biennial Report`,
+      agency: `VT SOS`,
+      frequency: `Biennial`,
+      summary: `Vermont corporate filing. Fee: $20. Due: Anniversary biennial.`,
+      details: `<h4>Filing</h4><p>Biennial Report</p><h4>Agency</h4><p>VT SOS</p><h4>Frequency</h4><p>Biennial</p><h4>Due</h4><p>Anniversary biennial</p><h4>Fee</h4><p>$20</p><h4>Where to file</h4><p><a href="https://sos.vermont.gov/corporations" target="_blank">sos.vermont.gov/corporations ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+  VA: [
+    {
+      id: 'va-corp-1',
+      name: `VA Annual Registration Fee`,
+      agency: `VA SCC`,
+      frequency: `Annual`,
+      summary: `Virginia corporate filing. Fee: $25. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Registration Fee</p><h4>Agency</h4><p>VA SCC</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://scc.virginia.gov/business" target="_blank">scc.virginia.gov/business ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'va-charity-reg',
+      name: `VA Charitable Solicitation Registration Renewal`,
+      agency: `VDACS Office of Charitable & Reg. Programs`,
+      frequency: `Annual`,
+      summary: `Virginia requires registration before soliciting donations. All soliciting orgs (limited exempt)`,
+      details: `<h4>Required</h4><p>All soliciting orgs (limited exempt)</p><h4>Regulator</h4><p>VDACS Office of Charitable & Reg. Programs</p><h4>Initial fee</h4><p>$30-$325</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$1,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  WA: [
+    {
+      id: 'wa-corp-1',
+      name: `WA Annual Report`,
+      agency: `WA SOS`,
+      frequency: `Annual`,
+      summary: `Washington corporate filing. Fee: $10. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>WA SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://sos.wa.gov/corps" target="_blank">sos.wa.gov/corps ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'wa-charity-reg',
+      name: `WA Charitable Solicitation Registration Renewal`,
+      agency: `WA Secretary of State Charities`,
+      frequency: `Annual`,
+      summary: `Washington requires registration before soliciting donations. Gross revenue >$50,000 OR paid solicitor`,
+      details: `<h4>Required</h4><p>Gross revenue >$50,000 OR paid solicitor</p><h4>Regulator</h4><p>WA Secretary of State Charities</p><h4>Initial fee</h4><p>$60</p><h4>Annual renewal</h4><p>Annual $40</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$3,000,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  WV: [
+    {
+      id: 'wv-corp-1',
+      name: `WV Annual Report`,
+      agency: `WV SOS`,
+      frequency: `Annual`,
+      summary: `West Virginia corporate filing. Fee: $25. Due: July 1.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>WV SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>July 1</p><h4>Fee</h4><p>$25</p><h4>Where to file</h4><p><a href="https://sos.wv.gov" target="_blank">sos.wv.gov ↗</a></p>`,
+      dueRule: p => nextOccurrence(7, 1)
+    },
+    {
+      id: 'wv-charity-reg',
+      name: `WV Charitable Solicitation Registration Renewal`,
+      agency: `WV Secretary of State`,
+      frequency: `Annual`,
+      summary: `West Virginia requires registration before soliciting donations. Contributions >$25,000`,
+      details: `<h4>Required</h4><p>Contributions >$25,000</p><h4>Regulator</h4><p>WV Secretary of State</p><h4>Initial fee</h4><p>$15-$50</p><h4>Annual renewal</h4><p>Annual based on revenue</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  WI: [
+    {
+      id: 'wi-corp-1',
+      name: `WI Annual Report`,
+      agency: `WI DFI`,
+      frequency: `Annual`,
+      summary: `Wisconsin corporate filing. Fee: $10. Due: Anniversary quarter.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>WI DFI</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary quarter</p><h4>Fee</h4><p>$10</p><h4>Where to file</h4><p><a href="https://dfi.wi.gov/corporations" target="_blank">dfi.wi.gov/corporations ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+    {
+      id: 'wi-charity-reg',
+      name: `WI Charitable Solicitation Registration Renewal`,
+      agency: `WI Dept. of Financial Institutions`,
+      frequency: `Annual`,
+      summary: `Wisconsin requires registration before soliciting donations. Contributions >$25,000 OR paid solicitor`,
+      details: `<h4>Required</h4><p>Contributions >$25,000 OR paid solicitor</p><h4>Regulator</h4><p>WI Dept. of Financial Institutions</p><h4>Initial fee</h4><p>$15</p><h4>Annual renewal</h4><p>Annual $15</p><h4>Accepts URS</h4><p>Yes</p><h4>Audit threshold</h4><p>$500,000 (audit) / $300k (review)</p>`,
+      dueRule: p => monthsAfterFYE(p, 6)
+    },
+  ],
+  WY: [
+    {
+      id: 'wy-corp-1',
+      name: `WY Annual Report`,
+      agency: `WY SOS`,
+      frequency: `Annual`,
+      summary: `Wyoming corporate filing. Fee: $25 min. Due: Anniversary month.`,
+      details: `<h4>Filing</h4><p>Annual Report</p><h4>Agency</h4><p>WY SOS</p><h4>Frequency</h4><p>Annual</p><h4>Due</h4><p>Anniversary month</p><h4>Fee</h4><p>$25 min</p><h4>Where to file</h4><p><a href="https://wyobiz.wyo.gov" target="_blank">wyobiz.wyo.gov ↗</a></p>`,
+      dueRule: p => { const d = new Date(); d.setMonth(d.getMonth()+6); return d; }
+    },
+  ],
+};
+
+
+
+// ═════════════════════════════════════════════
+//  DOCUMENT TEMPLATES
+//  Each: id, name, icon, desc, fields[], template(string with {{placeholders}})
+// ═════════════════════════════════════════════
+const DOC_TEMPLATES = [
+  { id:'agenda', name:'Board Meeting Agenda', icon:'📋', desc:'Structured agenda for a board meeting.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'mtgDate', label:'Meeting Date', type:'date'},
+      {id:'mtgTime', label:'Start Time', type:'text', ph:'4:00 PM'},
+      {id:'mtgLocation', label:'Location or Video Link', type:'text', ph:'Zoom — link in calendar invite'},
+      {id:'chairName', label:'Board Chair', type:'text'},
+      {id:'oldBiz', label:'Old Business Items (one per line)', type:'textarea', ph:'Approve minutes from prior meeting\nProgram director update'},
+      {id:'newBiz', label:'New Business Items (one per line)', type:'textarea', ph:'Q3 financials\nApprove updated COI policy\nFundraising committee report'}
+    ],
+    template:`{{orgName}}
+Board of Directors Meeting Agenda
+{{mtgDate}} | {{mtgTime}}
+{{mtgLocation}}
+
+Presiding: {{chairName}}, Board Chair
+
+1. CALL TO ORDER
+2. ROLL CALL & CONFIRMATION OF QUORUM
+3. APPROVAL OF AGENDA
+4. OLD BUSINESS
+{{oldBizFormatted}}
+5. NEW BUSINESS
+{{newBizFormatted}}
+6. EXECUTIVE DIRECTOR REPORT
+7. FINANCIAL REPORT
+8. COMMITTEE REPORTS
+9. PUBLIC COMMENT (if applicable)
+10. NEXT MEETING DATE
+11. ADJOURNMENT
+
+Executive Session may be called at the discretion of the Chair.` },
+
+  { id:'minutes', name:'Board Meeting Minutes', icon:'📝', desc:'Formal minutes documenting decisions and motions.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'mtgDate', label:'Meeting Date', type:'date'},
+      {id:'mtgLocation', label:'Location', type:'text', ph:'Zoom / 123 Main St / etc.'},
+      {id:'present', label:'Directors Present', type:'textarea', ph:'Alex Rivera (Chair)\nJordan Park (Treasurer)\nSam Wong (Secretary)\nTaylor Reyes'},
+      {id:'absent', label:'Directors Absent (with/without notice)', type:'textarea'},
+      {id:'staff', label:'Staff/Others Present', type:'textarea', ph:'Jamie Patel, Executive Director'},
+      {id:'motions', label:'Motions and Decisions (one per line: motion / mover / second / vote)', type:'textarea', ph:'Approve June 12 minutes / Rivera / Park / Unanimous\nApprove FY25 budget / Park / Reyes / 4 in favor, 1 abstain'},
+      {id:'discussion', label:'Key Discussion Points', type:'textarea', ph:'Reviewed Q2 financials — revenue 8% ahead of budget. Discussed staffing plan for new program.'},
+      {id:'actionItems', label:'Action Items (one per line: task / owner / due)', type:'textarea', ph:'Draft new COI policy / Wong / next meeting\nSchedule audit kickoff / Patel / Aug 30'},
+      {id:'adjournTime', label:'Adjournment Time', type:'text', ph:'5:42 PM'}
+    ],
+    template:`{{orgName}}
+BOARD OF DIRECTORS MEETING MINUTES
+{{mtgDate}}
+{{mtgLocation}}
+
+ATTENDANCE
+Directors Present:
+{{presentFormatted}}
+
+Directors Absent:
+{{absentFormatted}}
+
+Staff / Others Present:
+{{staffFormatted}}
+
+A quorum was confirmed.
+
+CALL TO ORDER
+The meeting was called to order.
+
+DISCUSSION
+{{discussion}}
+
+MOTIONS AND DECISIONS
+{{motionsFormatted}}
+
+ACTION ITEMS
+{{actionItemsFormatted}}
+
+ADJOURNMENT
+The meeting adjourned at {{adjournTime}}.
+
+Respectfully submitted,
+_______________________________________
+Secretary
+
+Approved at the next meeting of the Board.` },
+
+  { id:'coi-disclosure', name:'Annual COI Disclosure Form', icon:'🤝', desc:'Form each director and key employee signs annually.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'fy', label:'Fiscal Year', type:'text', ph:'July 1 2025 – June 30 2026'},
+      {id:'signerName', label:'Signer Name (for pre-fill)', type:'text', ph:'Leave blank for unsigned template'}
+    ],
+    template:`{{orgName}}
+ANNUAL CONFLICT OF INTEREST DISCLOSURE
+Fiscal Year: {{fy}}
+
+NAME: {{signerName}}
+ROLE: ___________________________________________
+
+Please disclose any of the following relationships, interests, or activities that may create an actual or apparent conflict of interest with {{orgName}}.
+
+1. Do you, or any member of your immediate family, have a financial interest in, or receive compensation from, any entity that does business with the organization (vendor, contractor, donor, grantee)?
+   ☐ NO    ☐ YES — describe below:
+   __________________________________________________________
+   __________________________________________________________
+
+2. Do you serve on the board of, or hold an officer position with, any other organization that has a relationship (financial, programmatic, or competitive) with the organization?
+   ☐ NO    ☐ YES — describe below:
+   __________________________________________________________
+
+3. Has the organization, during the past year, entered into any transaction with you, a member of your immediate family, or any entity in which you or they have a material financial interest?
+   ☐ NO    ☐ YES — describe below:
+   __________________________________________________________
+
+4. Are there any other relationships, transactions, or circumstances that could reasonably be perceived as a conflict of interest?
+   ☐ NO    ☐ YES — describe below:
+   __________________________________________________________
+
+I have read the organization's Conflict of Interest Policy and understand my obligations to disclose any actual, potential, or perceived conflicts as they arise during the year.
+
+SIGNATURE: _________________________________  DATE: _____________` },
+
+  { id:'coi-policy', name:'Conflict of Interest Policy', icon:'⚖️', desc:'Boilerplate COI policy aligned with IRS Form 990 expectations.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'effectiveDate', label:'Effective Date', type:'date'}
+    ],
+    template:`{{orgName}}
+CONFLICT OF INTEREST POLICY
+Effective: {{effectiveDate}}
+
+ARTICLE I — PURPOSE
+The purpose of this conflict of interest policy is to protect the interest of {{orgName}} when it is contemplating entering into a transaction or arrangement that might benefit the private interest of an officer, director, or key employee, or might result in a possible excess-benefit transaction.
+
+ARTICLE II — DEFINITIONS
+1. Interested Person: any director, principal officer, or member of a committee with governing-board-delegated powers who has a direct or indirect financial interest.
+2. Financial Interest: any ownership or investment interest in, compensation arrangement with, or potential ownership/investment/compensation arrangement with any entity or individual with which the organization has a transaction or arrangement.
+
+ARTICLE III — PROCEDURES
+1. Duty to Disclose. In connection with any actual or possible conflict of interest, an interested person must disclose the existence of the financial interest and be given the opportunity to disclose all material facts to the directors and members of committees with governing-board-delegated powers considering the proposed transaction or arrangement.
+
+2. Determining Whether a Conflict Exists. After disclosure, the interested person shall leave the meeting while the conflict is discussed and voted upon. The remaining board members shall decide if a conflict of interest exists.
+
+3. Procedures for Addressing the Conflict.
+   a. The interested person may make a presentation, after which they shall leave the meeting.
+   b. The chair shall, if appropriate, appoint a disinterested committee to investigate alternatives.
+   c. After exercising due diligence, the governing board shall determine whether the organization can obtain a more advantageous transaction from a person or entity that would not give rise to a conflict.
+   d. If a more advantageous transaction is not reasonably possible, the board shall determine by a majority vote of the disinterested directors whether the transaction is in the organization's best interest, for its own benefit, and whether it is fair and reasonable.
+
+4. Violations. If the board has reasonable cause to believe a member has failed to disclose actual or possible conflicts, it shall inform the member of the basis for such belief and afford the member an opportunity to explain.
+
+ARTICLE IV — RECORDS OF PROCEEDINGS
+The minutes of the governing board shall contain the names of persons who disclosed or otherwise were found to have a financial interest, the nature of the financial interest, any action taken to determine whether a conflict was present, and the governing board's decision.
+
+ARTICLE V — ANNUAL STATEMENTS
+Each director, principal officer, and member of a committee with governing-board-delegated powers shall annually sign a statement which affirms that they have received a copy of this policy, have read and understand it, and have agreed to comply with it.
+
+ARTICLE VI — PERIODIC REVIEWS
+To ensure the organization operates in a manner consistent with its tax-exempt purposes, periodic reviews shall be conducted of compensation, partnerships, and joint ventures.
+
+Adopted by the Board of Directors on: ____________________` },
+
+  { id:'doc-retention', name:'Document Retention Policy', icon:'🗄️', desc:'Standard schedule for retaining and destroying organizational records.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'effectiveDate', label:'Effective Date', type:'date'}
+    ],
+    template:`{{orgName}}
+DOCUMENT RETENTION AND DESTRUCTION POLICY
+Effective: {{effectiveDate}}
+
+PURPOSE
+This policy establishes guidelines for the retention and destruction of documents created or received by {{orgName}}. It supports compliance with legal requirements and the organization's information needs.
+
+RETENTION SCHEDULE
+
+CORPORATE RECORDS
+Articles of Incorporation, Bylaws, Board minutes, Tax-exemption determination letter — Permanent
+Annual reports to government — Permanent
+Conflict of interest disclosures — 7 years
+IRS Forms 990 — Permanent
+
+FINANCIAL RECORDS
+Audited financial statements — Permanent
+General ledgers and journals — Permanent
+Bank statements and reconciliations — 7 years
+Accounts payable / receivable records — 7 years
+Expense reports and supporting documentation — 7 years
+Payroll registers, W-2s, W-3s — 7 years
+
+PERSONNEL RECORDS
+Personnel files — 7 years after termination
+I-9 forms — 3 years after hire OR 1 year after termination, whichever is later
+Workers' compensation records — 11 years
+Time records — 3 years
+
+DONOR & GRANT RECORDS
+Donor records and acknowledgments — 7 years
+Grant applications and award letters — 7 years after grant period ends
+Grant reports — 7 years after grant period ends
+
+TAX RECORDS
+Tax returns (federal/state) — Permanent
+Supporting documentation for tax returns — 7 years
+
+INSURANCE
+Policies — Permanent (records of claims even after policy expires)
+Claims correspondence — 11 years
+
+CORRESPONDENCE
+General correspondence — 3 years
+Routine emails — 1 year unless related to retained records
+
+ELECTRONIC RECORDS
+Electronic records subject to the same retention period as the equivalent paper record.
+
+DESTRUCTION
+Records past their retention period shall be destroyed in a manner that preserves confidentiality (shredding paper, secure deletion for electronic).
+
+LITIGATION HOLD
+Notwithstanding the above, no record relevant to anticipated, pending, or threatened litigation, audit, or investigation shall be destroyed.
+
+Adopted by the Board of Directors on: ____________________` },
+
+  { id:'whistleblower', name:'Whistleblower Policy', icon:'📣', desc:'Required for orgs receiving federal funds; recommended for all.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'reportContact', label:'Designated Reporting Contact (name + role)', type:'text', ph:'Board Chair, Alex Rivera'},
+      {id:'effectiveDate', label:'Effective Date', type:'date'}
+    ],
+    template:`{{orgName}}
+WHISTLEBLOWER POLICY
+Effective: {{effectiveDate}}
+
+1. PURPOSE
+{{orgName}} requires directors, officers, and employees to observe high standards of business and personal ethics in the conduct of their duties. As employees and representatives, we must practice honesty and integrity in fulfilling our responsibilities and comply with all applicable laws and regulations.
+
+2. REPORTING RESPONSIBILITY
+All directors, officers, employees, and volunteers have a responsibility to report any action or suspected action taken within {{orgName}} that is illegal, fraudulent, or in violation of any adopted policy.
+
+3. NO RETALIATION
+No director, officer, employee, or volunteer who in good faith reports a violation shall suffer harassment, retaliation, or adverse employment consequence. An employee who retaliates against someone who has reported a violation in good faith is subject to discipline up to and including termination.
+
+4. REPORTING PROCEDURE
+Concerns should generally be raised first with one's immediate supervisor. If that is not possible or appropriate, concerns should be reported to: {{reportContact}}.
+
+If the concern involves the Board Chair or another senior leader and reporting to that person is not appropriate, the concern should be reported to the Treasurer or any other officer.
+
+Reports may be made anonymously, in writing, addressed to the designated contact above.
+
+5. ACTING IN GOOD FAITH
+Anyone filing a report must be acting in good faith and have reasonable grounds for believing the information disclosed indicates an improper accounting, auditing, or other policy violation. Knowingly false or malicious allegations are themselves a violation of this policy.
+
+6. CONFIDENTIALITY
+Reports of violations will be kept confidential to the extent possible, consistent with the need to investigate the matter.
+
+7. HANDLING OF REPORTED VIOLATIONS
+The designated contact will notify the sender and acknowledge receipt of the reported violation within five business days. All reports will be promptly investigated and appropriate corrective action will be taken if warranted.
+
+Adopted by the Board of Directors on: ____________________` },
+
+  { id:'gift-accept', name:'Gift Acceptance Policy', icon:'🎁', desc:'Sets clear standards for which gifts to accept and which to decline.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'effectiveDate', label:'Effective Date', type:'date'}
+    ],
+    template:`{{orgName}}
+GIFT ACCEPTANCE POLICY
+Effective: {{effectiveDate}}
+
+1. PURPOSE
+This policy provides guidelines to {{orgName}} board, staff, donors, and other constituencies regarding the acceptance of gifts. It is intended to ensure that all gifts to the organization further the mission and that gifts of non-cash assets are reviewed for appropriateness.
+
+2. TYPES OF GIFTS ACCEPTED
+The following types of gifts are routinely accepted with no special review:
+   • Cash and equivalents (checks, electronic transfers, credit card)
+   • Publicly traded marketable securities
+   • Bequests and life-insurance designations of cash or marketable securities
+
+3. GIFTS REQUIRING REVIEW BEFORE ACCEPTANCE
+The following gifts require review by the Executive Director and, where indicated, the Board, before acceptance:
+   • Real estate — Board approval required after environmental and title review
+   • Closely-held or restricted securities — Board approval required
+   • Tangible personal property valued over $5,000 — Board approval required
+   • Cryptocurrency — Executive Director approval; must be liquidated within 7 days of receipt
+   • Gifts with significant restrictions on use — Executive Director and Board review
+
+4. GIFTS NOT ACCEPTED
+{{orgName}} reserves the right to decline any gift that:
+   • Is incompatible with the mission, vision, or values of the organization
+   • Would create unmanageable administrative or financial burden
+   • Comes with restrictions that conflict with our 501(c)(3) status or programmatic priorities
+   • Carries reputational or legal risk
+   • Requires the organization to take action that is unethical or illegal
+
+5. DONOR RECOGNITION
+All gifts will be acknowledged in writing in compliance with IRS requirements. Recognition will be tailored to donor preferences and gift level.
+
+6. NAMED GIFTS
+Naming opportunities require a written agreement specifying duration, conditions, and any reservation of rights for the organization to remove the name if circumstances warrant.
+
+7. FEES AND PROFESSIONAL ADVICE
+{{orgName}} will not pay fees to any third party who refers a donor to the organization. Donors are encouraged to seek their own legal and tax counsel before making significant gifts.
+
+Adopted by the Board of Directors on: ____________________` },
+
+  { id:'resolution', name:'Board Resolution', icon:'✅', desc:'Standalone resolution for an action between meetings or to formalize a decision.',
+    fields:[
+      {id:'orgName', label:'Organization Name', type:'text'},
+      {id:'resolutionTitle', label:'Resolution Title', type:'text', ph:'Resolution Authorizing Bank Account Opening'},
+      {id:'whereas', label:'Whereas clauses (one per line — context/background)', type:'textarea', ph:'The Organization is in need of a new operating account\nThe Treasurer has identified Local Bank as a suitable institution'},
+      {id:'resolved', label:'Resolved clauses (one per line — what is being decided)', type:'textarea', ph:'That the Treasurer is authorized to open an operating account at Local Bank in the name of the Organization\nThat the Executive Director and Treasurer are authorized signers on the account'},
+      {id:'adoptDate', label:'Adoption Date', type:'date'}
+    ],
+    template:`{{orgName}}
+RESOLUTION OF THE BOARD OF DIRECTORS
+
+{{resolutionTitle}}
+
+{{whereasFormatted}}
+
+NOW, THEREFORE, BE IT RESOLVED:
+
+{{resolvedFormatted}}
+
+The foregoing resolution was duly adopted by the Board of Directors on {{adoptDate}}.
+
+_______________________________________
+Secretary
+
+_______________________________________
+Chair / President` }
+];
+
+// ═════════════════════════════════════════════
+//  EDUCATION ARTICLES
+// ═════════════════════════════════════════════
+const EDU_ARTICLES = [
+  { id:'why-compliance', tag:'Foundations', title:'Why nonprofit compliance matters', snip:'Compliance isn\'t bureaucracy — it\'s how you protect your 501(c)(3) status and your board.',
+    body:`<h2>Why nonprofit compliance matters</h2>
+<p>Compliance isn't bureaucracy. It's how you protect three things that took serious effort to acquire: your 501(c)(3) status, your board's willingness to serve, and the public's trust in your organization.</p>
+<h3>What's at stake</h3>
+<p>The IRS automatically revokes 501(c)(3) status after three consecutive years of failing to file a Form 990. The Pension Protection Act of 2006 made this automatic — no warning letter, no chance to fix it before the fact. Once revoked, you have to apply for reinstatement, pay user fees, and explain the gap to every donor and funder who asks why your status changed.</p>
+<p>State-level failures are similarly unforgiving. Most states will administratively dissolve your nonprofit corporation if you skip the annual report for a year or two. Once dissolved, directors lose the personal liability protection of the corporate shield.</p>
+<h3>The board's role</h3>
+<p>Directors have fiduciary duties — duty of care, duty of loyalty, and duty of obedience. Compliance is how those duties become concrete. A board that doesn't review the 990 before filing, doesn't collect COI disclosures, and doesn't approve minutes is a board that's exposed.</p>
+<h3>The good news</h3>
+<p>The compliance landscape for small nonprofits is actually manageable if you treat it as a routine, calendared activity rather than a fire drill. Most of the year's filings cluster around the same dates relative to your fiscal year end. Once you've set up the calendar and templates, it's mostly the same work in different years.</p>` },
+  { id:'990-explained', tag:'Federal', title:'Form 990: which one do I file?', snip:'There are four flavors of Form 990 — picking the right one is mostly a function of revenue and org type.',
+    body:`<h2>Form 990: which one do I file?</h2>
+<p>The IRS has four versions of the annual return. Picking the right one is mostly a function of your gross revenue and what type of organization you are.</p>
+<h3>Form 990-N (e-Postcard)</h3>
+<p>For public charities with gross receipts normally ≤ $50,000. It's 8 questions, filed online. No paper option, no extension. Takes about 5 minutes if you have your EIN handy.</p>
+<h3>Form 990-EZ</h3>
+<p>For public charities with gross receipts < $200,000 AND total assets < $500,000. Four pages plus schedules. You can file this even if you qualify for 990-N — sometimes funders prefer it because it shows more.</p>
+<h3>Form 990 (Full)</h3>
+<p>Required for public charities with gross receipts ≥ $200,000 OR total assets ≥ $500,000. Twelve pages plus extensive schedules. This is the one that ends up on GuideStar/Candid and ProPublica.</p>
+<h3>Form 990-PF</h3>
+<p>For all private foundations regardless of revenue. Different rules apply — minimum distribution requirement, additional excise taxes, self-dealing rules.</p>
+<h3>Form 990-T</h3>
+<p>Anyone with unrelated business income (UBI) of $1,000+ files this — in addition to their regular 990. Common UBI sources: advertising in your newsletter, sale of mission-unrelated merchandise, rental income from debt-financed property.</p>
+<h3>Deadline</h3>
+<p>All flavors of Form 990 are due the 15th day of the 5th month after your fiscal year end. For a December 31 fiscal year, that's May 15. Form 8868 gives you an automatic 6-month extension.</p>` },
+  { id:'state-charity', tag:'State', title:'State charitable registration explained', snip:'40+ states require you to register before soliciting donations from their residents.',
+    body:`<h2>State charitable registration explained</h2>
+<p>Most people don't know this until they're sued or fined: more than 40 states require nonprofits to register with a state agency before soliciting donations from that state's residents. "Solicit" includes online — if your donate page is accessible to someone in New York, technically you're soliciting in New York.</p>
+<h3>The Charleston Principles</h3>
+<p>In 2001, NASCO issued the Charleston Principles to guide states on online solicitation. The short version: if you have an interactive donate page (not just a passive informational site) AND you actively target a state's residents (email campaigns, ads, fundraising events there, repeated donations from that state), you should register.</p>
+<h3>Common exemptions</h3>
+<ul>
+<li>Religious organizations (in most states)</li>
+<li>Educational institutions</li>
+<li>Hospitals</li>
+<li>Organizations below a revenue threshold (varies)</li>
+<li>Membership-only solicitation (where you don't solicit from non-members)</li>
+</ul>
+<h3>The practical approach</h3>
+<p>Most small nonprofits register in (1) their state of incorporation, (2) any state where they have a physical presence, and (3) any state where they actively fundraise. They monitor where donations come from and add registrations when activity warrants.</p>
+<h3>The Unified Registration Statement (URS)</h3>
+<p>The URS was designed to let you file one form across multiple states. Sadly, several major states (California, Florida, others) no longer accept it. For multi-state registration, plan to use individual state forms.</p>` },
+  { id:'audit-thresholds', tag:'Governance', title:'When do you need an independent audit?', snip:'Triggered by federal funds, state law, bylaws, or funder requirements — not by IRS rule.',
+    body:`<h2>When do you need an independent audit?</h2>
+<p>The IRS doesn't require nonprofits to be audited. The trigger usually comes from one of four other places.</p>
+<h3>Federal funds — the Single Audit</h3>
+<p>If your organization spends $750,000 or more in federal awards in a fiscal year, you must obtain a Single Audit under Uniform Guidance (2 CFR 200). Pass-through funds count.</p>
+<h3>State law</h3>
+<p>Many states require audited financials at certain revenue thresholds. Common thresholds:</p>
+<ul>
+<li>California: $2M+ gross revenue</li>
+<li>New York: $1M+ gross revenue (review at $250k–$1M)</li>
+<li>Pennsylvania: $750k+ contributions</li>
+<li>Illinois: $300k+ contributions (review at $25k–$300k)</li>
+</ul>
+<p>Thresholds change. Check current state requirements.</p>
+<h3>Bylaws</h3>
+<p>Some organizations write an annual audit requirement into their bylaws. If yours do — you're on the hook regardless of size.</p>
+<h3>Funder requirements</h3>
+<p>Major foundations and corporate funders frequently require audited financials as part of grant applications and reporting. Even if state law doesn't require an audit, your funders might.</p>
+<h3>Cost & timeline</h3>
+<p>Small/mid nonprofits should budget $8k–$25k for an annual audit. Fieldwork is 1–2 weeks; total turnaround is typically 3–6 months. Plan to issue audited financials within 6 months of fiscal year end.</p>` },
+  { id:'coi-explained', tag:'Governance', title:'COI policies: what the IRS actually wants', snip:'Form 990 explicitly asks about your COI policy. Saying "no" gets noticed.',
+    body:`<h2>COI policies: what the IRS actually wants</h2>
+<p>Form 990 Part VI asks three questions about your conflict of interest practices: do you have a written policy, do you require annual disclosures, and do you regularly monitor and enforce compliance? Answering "no" to any of these is a red flag.</p>
+<h3>What makes a good COI policy</h3>
+<p>The IRS publishes a sample policy in the Form 1023 instructions (Appendix A). Use it as your starting point. A solid policy has these components:</p>
+<ul>
+<li>Definition of who is an "interested person" (directors, officers, key employees)</li>
+<li>Definition of "financial interest"</li>
+<li>Duty to disclose</li>
+<li>Procedures for determining whether a conflict exists</li>
+<li>Procedures for addressing a conflict (recusal, board approval, alternatives review)</li>
+<li>Record-keeping in minutes</li>
+<li>Annual disclosure requirement</li>
+<li>Periodic review of compensation and joint ventures</li>
+</ul>
+<h3>Annual disclosure forms</h3>
+<p>Once a year, every director, officer, and key employee signs a disclosure form. They list any business relationships, family-member employment with the org, service on related entity boards, or other relationships that could create a conflict.</p>
+<h3>What to do with a disclosure</h3>
+<p>When a disclosed conflict comes up in board business: the interested person discloses, then leaves the room while the board discusses and votes. The minutes record (a) the disclosure, (b) the recusal, (c) the vote of disinterested directors, and (d) the basis for the board's conclusion that the transaction is fair.</p>` },
+  { id:'ubit', tag:'Federal', title:'What is UBIT (Unrelated Business Income Tax)?', snip:'Yes, your nonprofit can owe income tax — on activities unrelated to your mission.',
+    body:`<h2>What is UBIT?</h2>
+<p>Surprise: 501(c)(3) organizations can owe federal income tax. It's called Unrelated Business Income Tax, or UBIT, and it applies to net income from activities that meet all three of these tests.</p>
+<h3>The three-part test</h3>
+<ol>
+<li>It's a <b>trade or business</b> — you're producing income from selling goods or services.</li>
+<li>It's <b>regularly carried on</b> — not a one-off bake sale.</li>
+<li>It's <b>not substantially related</b> to your exempt purpose.</li>
+</ol>
+<h3>Common UBI sources</h3>
+<ul>
+<li>Selling advertising in your newsletter, magazine, or website</li>
+<li>Selling merchandise unrelated to your mission</li>
+<li>Renting out debt-financed real estate</li>
+<li>Some affinity programs (e.g., branded credit card royalties — but pure royalties may be excluded)</li>
+</ul>
+<h3>Common exclusions</h3>
+<ul>
+<li>Activities conducted by volunteers</li>
+<li>Activities for the convenience of members, students, or employees</li>
+<li>Sale of donated merchandise (most thrift store income)</li>
+<li>Royalties (not advertising)</li>
+<li>Dividends, interest, most rental income</li>
+</ul>
+<h3>Filing requirement</h3>
+<p>If gross UBI is $1,000 or more in a year, file Form 990-T in addition to your regular 990. Tax is computed at corporate rates (currently 21%).</p>` },
+  { id:'minutes-howto', tag:'Governance', title:'How to write defensible board minutes', snip:'Minutes are a record of decisions, not a transcript of discussion.',
+    body:`<h2>How to write defensible board minutes</h2>
+<p>Many nonprofit secretaries fall into one of two traps: they either write nothing (a one-page summary with no detail) or they write everything (a 12-page transcript of who said what). Neither is what you want.</p>
+<h3>What to include</h3>
+<ul>
+<li>Date, time, location (physical or virtual)</li>
+<li>Members present, members absent (with or without notice)</li>
+<li>Confirmation of quorum</li>
+<li>Approval of prior minutes</li>
+<li>For each motion: exact text of the motion, who moved, who seconded, the vote (unanimous, or counted), whether anyone abstained or recused</li>
+<li>Key reports given (one sentence each)</li>
+<li>Action items with owner and deadline</li>
+<li>Time of adjournment</li>
+</ul>
+<h3>What to leave out</h3>
+<p>Don't transcribe discussion. Minutes are a record of decisions, not a transcript. If a long debate happened, one sentence like "Following discussion of options A and B, the board concluded that option A was in the organization's best interest" is plenty. Avoid editorial framing or attributing positions to specific directors.</p>
+<h3>Sensitive matters</h3>
+<p>If something sensitive comes up (personnel issue, litigation, executive comp), the board may enter executive session. Minutes from executive session are kept separately and only summarize that an executive session occurred, what topic was discussed, and any motion that resulted.</p>
+<h3>Approval and storage</h3>
+<p>Minutes are drafted shortly after the meeting, distributed in the next meeting's packet, and approved at the next meeting. Once approved, they are permanent records. Store in a corporate minute book (physical or electronic) maintained by the Secretary.</p>` },
+  { id:'fiscal-year', tag:'Foundations', title:'How fiscal year end affects everything', snip:'Most federal and state deadlines are relative to your fiscal year end — not the calendar.',
+    body:`<h2>How fiscal year end affects everything</h2>
+<p>Many nonprofits assume "annual" deadlines are calendar-based — May 15, March 1, December 31. For most filings, they're not. They're relative to your fiscal year end.</p>
+<h3>The pattern</h3>
+<p>Form 990 is due "the 15th day of the 5th month after fiscal year end."</p>
+<ul>
+<li>FY ending December 31 → 990 due May 15</li>
+<li>FY ending June 30 → 990 due November 15</li>
+<li>FY ending September 30 → 990 due February 15</li>
+</ul>
+<p>State charity renewals usually follow similar logic — 4 to 6 months after fiscal year end.</p>
+<h3>Picking your fiscal year</h3>
+<p>You set your fiscal year when you incorporate. Common patterns:</p>
+<ul>
+<li><b>Calendar year</b> (Jan 1 – Dec 31): simplest; matches personal tax year</li>
+<li><b>July 1 – June 30</b>: common for educational/youth orgs aligned to school year</li>
+<li><b>October 1 – September 30</b>: matches federal fiscal year (useful for federal grantees)</li>
+</ul>
+<h3>Changing your fiscal year</h3>
+<p>You can change your fiscal year, but it requires IRS approval (Form 1128) and produces a short-year return. Usually not worth the hassle unless there's a strong reason.</p>` },
+  { id:'990-public', tag:'Federal', title:'Form 990 is public. Read it before you file it.', snip:'Funders, donors, and reporters read your 990. Make sure it represents you well.',
+    body:`<h2>Form 990 is public. Read it before you file it.</h2>
+<p>Form 990 is a public information return. Within weeks of filing, it appears on GuideStar/Candid, ProPublica's Nonprofit Explorer, and the IRS website. Major donors, foundations, and journalists read it. Yours should be one you'd be proud to show.</p>
+<h3>Sections funders read first</h3>
+<ul>
+<li><b>Part I — Summary:</b> The dashboard. Revenue, expenses, employees, volunteers.</li>
+<li><b>Part III — Program Service Accomplishments:</b> Your mission story. You get to write this — make it good.</li>
+<li><b>Part VI — Governance:</b> Policies (COI, whistleblower, document retention), board independence, public disclosure.</li>
+<li><b>Part VII — Compensation:</b> Officer and key employee compensation. People will look. Make sure it's defensible.</li>
+<li><b>Part VIII / IX — Statement of revenue / expenses:</b> Where the numbers live.</li>
+<li><b>Schedule O — Narrative explanations:</b> Where you provide additional context for unusual items.</li>
+</ul>
+<h3>Before you file</h3>
+<p>Make sure the executive director and treasurer have reviewed the full draft. Have the audit committee or treasurer present it to the full board. Most state laws and good governance practice expect board awareness of the 990 before filing — and Form 990 Part VI asks whether the full board received a copy before filing.</p>` },
+  { id:'1099-w9', tag:'Federal', title:'Always collect the W-9 first', snip:'The single highest-leverage habit in nonprofit financial admin.',
+    body:`<h2>Always collect the W-9 first</h2>
+<p>If there's one financial admin habit that pays for itself a hundred times over, it's this: never write a check to an independent contractor without getting a signed W-9 first.</p>
+<h3>Why it matters</h3>
+<p>At year-end, you have to issue a Form 1099-NEC to every contractor you paid $600 or more during the calendar year. The 1099 requires the contractor's legal name, address, and Taxpayer Identification Number (Social Security or EIN). All of that is on the W-9.</p>
+<p>If you don't have the W-9, you have to chase the contractor for it — in January, when they may have moved on, changed numbers, or be unwilling to respond. Without a TIN, you can't issue the 1099. Without issuing the 1099, you face IRS penalties of $60–$310 per missing form.</p>
+<h3>The simple fix</h3>
+<p>Make "signed W-9 on file" a precondition to issuing any check or wire transfer to any non-employee. Add it to your vendor onboarding checklist. Store W-9s in your financial records permanently.</p>
+<h3>Common gotchas</h3>
+<ul>
+<li>Single-member LLCs: the 1099 goes to the owner's name and SSN unless the LLC has elected corporate status. Get this right.</li>
+<li>Corporations don't need 1099s (with a few exceptions, like attorneys). The W-9 tells you which case applies.</li>
+<li>Honorariums to speakers, fees to non-employee board members, payments to translators — all get a 1099 at $600+.</li>
+</ul>` },
+  { id:'auto-revoke', tag:'Federal', title:'Automatic revocation: what it is and how to avoid it', snip:'Three years of missed 990s and your 501(c)(3) status is gone automatically.',
+    body:`<h2>Automatic revocation</h2>
+<p>Before 2006, the IRS would warn you about late 990 filings. Now, three consecutive years of missing Form 990 (any flavor — including 990-N) results in automatic revocation of your tax-exempt status. No warning, no grace period, no appeal.</p>
+<h3>What revocation means</h3>
+<ul>
+<li>You owe federal income tax retroactive to the revocation date.</li>
+<li>Donors lose their tax deduction for gifts made after revocation.</li>
+<li>You drop off most state charitable registries automatically.</li>
+<li>Most grant funders won't fund you while revoked.</li>
+<li>Your name appears on the IRS "Auto-Revocation List" — publicly searchable.</li>
+</ul>
+<h3>Reinstatement</h3>
+<p>You can apply for reinstatement using Form 1023 or 1023-EZ. The process takes 3–12 months and costs $275–$600 in user fees, plus professional fees if you need help. Retroactive reinstatement requires showing reasonable cause for the missed filings.</p>
+<h3>How to avoid it</h3>
+<p>Three things:</p>
+<ol>
+<li>Mark your 990 deadline on the calendar — the 15th day of the 5th month after fiscal year end.</li>
+<li>If you might miss it, file Form 8868 by the deadline for a 6-month automatic extension.</li>
+<li>Even if you have no activity to report, file the 990-N. It's the smallest filing — 8 questions, 5 minutes online.</li>
+</ol>` },
+  { id:'do-insurance', tag:'Governance', title:'D&O insurance: what it is and why your board needs it', snip:'Without D&O, your board members are personally exposed.',
+    body:`<h2>D&O insurance</h2>
+<p>Directors and Officers liability insurance protects board members and senior staff from personal financial liability arising from their organizational role.</p>
+<h3>What it covers</h3>
+<ul>
+<li><b>Employment practices:</b> Discrimination, harassment, wrongful termination claims (~60% of nonprofit D&O claims)</li>
+<li><b>Fiduciary duty claims:</b> Allegations of mismanagement, breach of duty</li>
+<li><b>Regulatory investigations:</b> AG investigations, IRS inquiries</li>
+<li><b>Failure to oversee:</b> Claims related to board oversight failures</li>
+</ul>
+<h3>What it doesn't cover</h3>
+<ul>
+<li>Intentional fraud or criminal acts (no insurance covers willful misconduct)</li>
+<li>Bodily injury or property damage (that's General Liability)</li>
+<li>Workers' comp (that's WC insurance)</li>
+<li>Cyber incidents (that's a separate cyber liability policy)</li>
+</ul>
+<h3>What it costs</h3>
+<p>Small nonprofits typically pay $500–$2,500/year for $1M of coverage. Adding Employment Practices Liability (often bundled) is highly recommended. Cost is driven by revenue, number of employees, claims history, and state.</p>
+<h3>Why it matters for board recruitment</h3>
+<p>Many qualified board candidates will not accept a seat without D&O coverage in place. If you're recruiting and don't have D&O, fix it before approaching candidates.</p>` }
+];
+
+// ═════════════════════════════════════════════
+//  STATE & PERSISTENCE
+// ═════════════════════════════════════════════
+const state = {
+  users: {},     // email -> { name, password, teamId, isSuperAdmin }
+  teams: {},     // teamId -> { id, profile, statuses, history, members:{email:role}, isPro, createdAt }
+  currentEmail: null,
+  selectedDoc: null,
+  selectedFiling: null,
+  selectedArticle: null,
+  adminViewingTeam: null
+};
+
+function save(){
+  try { localStorage.setItem('bya_compliance_v1', JSON.stringify(state)); } catch(e){}
+}
+function load(){
+  try {
+    const raw = localStorage.getItem('bya_compliance_v1');
+    if (raw){
+      const data = JSON.parse(raw);
+      Object.assign(state, data);
+    }
+  } catch(e){}
+}
+function currentUser(){ return state.currentEmail ? state.users[state.currentEmail] : null; }
+function currentTeam(){
+  if (state.adminViewingTeam && state.teams[state.adminViewingTeam]) return state.teams[state.adminViewingTeam];
+  const u = currentUser();
+  if (!u || !u.teamId) return null;
+  return state.teams[u.teamId] || null;
+}
+function isSuperAdmin(){ const u = currentUser(); return !!(u && u.isSuperAdmin); }
+function teamRole(){
+  const u = currentUser(); const t = currentTeam();
+  if (!u || !t) return null;
+  return t.members && t.members[state.currentEmail] || null;
+}
+function isLeader(){ return teamRole() === 'leader'; }
+
+function generateTeamCode(){
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let code;
+  do {
+    code = '';
+    for (let i=0;i<6;i++) code += chars[Math.floor(Math.random()*chars.length)];
+  } while (state.teams[code]);
+  return code;
+}
+function createTeam(leaderEmail, profile){
+  const id = generateTeamCode();
+  state.teams[id] = {
+    id, profile: profile || {}, statuses: {}, history: [],
+    members: { [leaderEmail]: 'leader' },
+    isPro: false, isOnTrial: false, trialEnds: null,
+    createdAt: new Date().toISOString()
+  };
+  return id;
+}
+function logHistory(entry){
+  const t = currentTeam();
+  if (!t) return;
+  t.history = t.history || [];
+  t.history.unshift({ ...entry, when: new Date().toISOString(), by: state.currentEmail });
+  if (t.history.length > 200) t.history.length = 200;
+}
+
+// Seed demo + admin once
+function seedDemo(){
+  if (!state.users['demo@example.org']){
+    state.users['demo@example.org'] = { name: 'Demo Leader', password: 'demo', teamId: null, isSuperAdmin: false };
+    const tid = createTeam('demo@example.org', {
+      orgName:'Build Your Club Foundation', orgType:'501c3-public',
+      state:'CA', fye:'12-31', revBracket:'small', staff:'few',
+      fundStates:['CA','NY','TX']
+    });
+    state.users['demo@example.org'].teamId = tid;
+    // Add a teammate to demonstrate team UX
+    state.users['member@example.org'] = { name: 'Demo Member', password: 'demo', teamId: tid, isSuperAdmin: false };
+    state.teams[tid].members['member@example.org'] = 'member';
+  }
+  if (!state.users['skycopatc@yahoo.com']){
+    state.users['skycopatc@yahoo.com'] = { name: 'Steve (Admin)', password: 'Buildyourclub', teamId: null, isSuperAdmin: true };
+  }
+  save();
+}
+
+// ═════════════════════════════════════════════
+//  AUTH
+// ═════════════════════════════════════════════
+function switchAuthTab(which){
+  document.getElementById('tab-signin').classList.toggle('active', which==='signin');
+  document.getElementById('tab-signup').classList.toggle('active', which==='signup');
+  document.getElementById('form-signin').classList.toggle('hidden', which!=='signin');
+  document.getElementById('form-signup').classList.toggle('hidden', which!=='signup');
+}
+function doSignIn(){
+  const email = (document.getElementById('si-email').value || '').trim().toLowerCase();
+  const pass = document.getElementById('si-pass').value;
+  if (!email || !pass) { alert('Email and password required'); return; }
+  const u = state.users[email];
+  if (!u || u.password !== pass) { alert('Email not found or password incorrect.\n\nTry demo@example.org / demo'); return; }
+  state.currentEmail = email;
+  state.adminViewingTeam = null;
+  save();
+  routeAfterAuth();
+}
+function routeAfterAuth(){
+  const u = currentUser();
+  if (u.isSuperAdmin && !u.teamId){ bootApp(); return; }   // admin lands in admin view
+  if (u.teamId && state.teams[u.teamId]) bootApp();
+  else showTeamChoice();
+}
+function doSignUp(){
+  const name = (document.getElementById('su-name').value || '').trim();
+  const email = (document.getElementById('su-email').value || '').trim().toLowerCase();
+  const pass = document.getElementById('su-pass').value;
+  if (!name || !email || !pass) { alert('All fields required'); return; }
+  if (pass.length < 6) { alert('Password must be at least 6 characters'); return; }
+  if (state.users[email]) { alert('Account already exists. Try signing in.'); return; }
+  state.users[email] = { name, password: pass, teamId: null, isSuperAdmin: false };
+  state.currentEmail = email;
+  save();
+  showTeamChoice();
+}
+
+// Team choice (between auth and onboarding)
+function showTeamChoice(){
+  document.getElementById('screen-auth').classList.add('hidden');
+  document.getElementById('screen-onboard').classList.add('hidden');
+  document.getElementById('screen-app').classList.add('hidden');
+  document.getElementById('screen-teamchoice').classList.remove('hidden');
+  document.getElementById('join-team-section').classList.add('hidden');
+}
+function chooseTeamPath(p){
+  if (p === 'new'){
+    document.getElementById('screen-teamchoice').classList.add('hidden');
+    startOnboarding();
+  } else {
+    document.getElementById('join-team-section').classList.remove('hidden');
+    document.getElementById('join-code').focus();
+  }
+}
+function joinTeamByCode(){
+  const code = (document.getElementById('join-code').value || '').trim().toUpperCase();
+  if (!code) { alert('Enter a team code'); return; }
+  const team = state.teams[code];
+  if (!team) { alert('That team code wasn\'t found. Double-check with the team leader.'); return; }
+  const u = currentUser();
+  // Enforce free-tier seat limit
+  const memberCount = Object.keys(team.members||{}).length;
+  if (!team.isPro && memberCount >= 3){
+    alert('This team is on the Free plan and already has 3 members. Ask the team leader to upgrade to Pro for unlimited seats.');
+    return;
+  }
+  team.members[state.currentEmail] = 'member';
+  u.teamId = code;
+  save();
+  bootApp();
+}
+function signOut(){
+  state.currentEmail = null;
+  save();
+  document.getElementById('screen-app').classList.add('hidden');
+  document.getElementById('screen-onboard').classList.add('hidden');
+  document.getElementById('screen-auth').classList.remove('hidden');
+}
+
+// ═════════════════════════════════════════════
+//  ONBOARDING
+// ═════════════════════════════════════════════
+let obData = {};
+function startOnboarding(){
+  const t = currentTeam();
+  obData = (t && t.profile) || {};
+  // Render org types
+  const ot = document.getElementById('ob-orgtypes');
+  ot.innerHTML = ORG_TYPES.map(t => `<div class="ob-pick" data-id="${t.id}" onclick="pickOrgType('${t.id}')"><div class="ob-pick-title">${t.label}</div><div class="ob-pick-desc">${t.desc}</div></div>`).join('');
+  if (obData.orgType) pickOrgType(obData.orgType, true);
+  if (obData.orgName) document.getElementById('ob-orgname').value = obData.orgName;
+  // States dropdown
+  const ss = document.getElementById('ob-state');
+  ss.innerHTML = '<option value="">Select state…</option>' + Object.entries(STATES).map(([code,name])=>`<option value="${code}">${name}</option>`).join('');
+  if (obData.state) ss.value = obData.state;
+  if (obData.fye) document.getElementById('ob-fye').value = obData.fye;
+  // Revenue brackets
+  const rb = document.getElementById('ob-revs');
+  rb.innerHTML = REV_BRACKETS.map(b => `<div class="ob-pick" data-id="${b.id}" onclick="pickRev('${b.id}')"><div class="ob-pick-title">${b.label}</div><div class="ob-pick-desc">${b.desc}</div></div>`).join('');
+  if (obData.revBracket) pickRev(obData.revBracket, true);
+  // Staff
+  const sf = document.getElementById('ob-staff');
+  sf.innerHTML = STAFF_OPTIONS.map(s => `<div class="ob-pick" data-id="${s.id}" onclick="pickStaff('${s.id}')"><div class="ob-pick-title">${s.label}</div><div class="ob-pick-desc">${s.desc}</div></div>`).join('');
+  if (obData.staff) pickStaff(obData.staff, true);
+  // Fundraising states
+  const fs = document.getElementById('ob-fundstates');
+  fs.innerHTML = Object.entries(STATES).map(([code,name])=>`<option value="${code}">${name}</option>`).join('');
+  if (obData.fundStates) {
+    Array.from(fs.options).forEach(o => { if (obData.fundStates.includes(o.value)) o.selected = true; });
+  }
+  // Show
+  document.getElementById('screen-auth').classList.add('hidden');
+  document.getElementById('screen-app').classList.add('hidden');
+  document.getElementById('screen-onboard').classList.remove('hidden');
+  showOBStep(1);
+}
+function showOBStep(n){
+  for (let i=1;i<=4;i++) document.getElementById('ob-step-'+i).classList.toggle('hidden', i!==n);
+  for (let i=1;i<=4;i++) document.getElementById('op-'+i).classList.toggle('done', i<=n);
+}
+function pickOrgType(id, silent){
+  obData.orgType = id;
+  document.querySelectorAll('#ob-orgtypes .ob-pick').forEach(el => el.classList.toggle('selected', el.dataset.id===id));
+}
+function pickRev(id, silent){
+  obData.revBracket = id;
+  document.querySelectorAll('#ob-revs .ob-pick').forEach(el => el.classList.toggle('selected', el.dataset.id===id));
+}
+function pickStaff(id, silent){
+  obData.staff = id;
+  document.querySelectorAll('#ob-staff .ob-pick').forEach(el => el.classList.toggle('selected', el.dataset.id===id));
+}
+function obNext(from){
+  if (from===1){
+    if (!obData.orgType) { alert('Please pick an organization type'); return; }
+    obData.orgName = document.getElementById('ob-orgname').value.trim() || 'My Nonprofit';
+  } else if (from===2){
+    obData.state = document.getElementById('ob-state').value;
+    obData.fye = document.getElementById('ob-fye').value;
+    if (!obData.state) { alert('Please pick a state'); return; }
+  } else if (from===3){
+    if (!obData.revBracket) { alert('Please pick a revenue bracket'); return; }
+  }
+  showOBStep(from+1);
+}
+function obBack(from){ showOBStep(from-1); }
+function finishOnboarding(){
+  if (!obData.staff) { alert('Please pick a staffing option'); return; }
+  const fs = document.getElementById('ob-fundstates');
+  obData.fundStates = Array.from(fs.selectedOptions).map(o => o.value);
+  const u = currentUser();
+  if (u.teamId && state.teams[u.teamId]){
+    // Update existing team profile (edit flow from settings)
+    state.teams[u.teamId].profile = obData;
+  } else {
+    // Create new team with user as leader
+    const tid = createTeam(state.currentEmail, obData);
+    u.teamId = tid;
+  }
+  save();
+  bootApp();
+}
+
+// ═════════════════════════════════════════════
+//  APP BOOT
+// ═════════════════════════════════════════════
+function bootApp(){
+  document.getElementById('screen-auth').classList.add('hidden');
+  document.getElementById('screen-onboard').classList.add('hidden');
+  document.getElementById('screen-teamchoice').classList.add('hidden');
+  document.getElementById('screen-app').classList.remove('hidden');
+  const u = currentUser();
+  const t = currentTeam();
+  const orgLabel = t && t.profile && t.profile.orgName ? t.profile.orgName : (u.isSuperAdmin ? 'Super Admin' : '—');
+  document.getElementById('sb-org').textContent = orgLabel;
+  document.getElementById('sb-uname').textContent = u.name + (u.isSuperAdmin ? ' (Admin)' : '');
+  document.getElementById('sb-avatar').textContent = (u.name||'?').charAt(0).toUpperCase();
+  // Show admin nav only for super-admin
+  document.getElementById('nav-admin').classList.toggle('hidden', !u.isSuperAdmin);
+  // Pro badge
+  updateProBadge();
+  // Default page: admin for super-admin, dashboard otherwise
+  navigate(u.isSuperAdmin && !state.adminViewingTeam ? 'admin' : 'dashboard');
+}
+
+function updateProBadge(){
+  const t = currentTeam();
+  const badge = document.getElementById('pro-badge');
+  const label = document.getElementById('pro-label');
+  const sub = document.getElementById('pro-sub');
+  if (!badge) return;
+  if (!t) { badge.classList.add('hidden'); return; }
+  badge.classList.remove('hidden');
+  if (t.isPro){
+    badge.classList.add('is-pro');
+    label.textContent = '✓ Pro Plan';
+    sub.textContent = t.isOnTrial ? 'Trial ends ' + new Date(t.trialEnds).toLocaleDateString() : 'Unlimited team seats';
+  } else {
+    badge.classList.remove('is-pro');
+    label.textContent = '⚡ Upgrade to Pro';
+    sub.textContent = '$29/month · 14-day free trial';
+  }
+}
+
+// ═════════════════════════════════════════════
+//  COMPILE COMPLIANCE ITEMS FOR USER
+// ═════════════════════════════════════════════
+function compileItems(){
+  const t = currentTeam();
+  if (!t) return [];
+  const p = t.profile;
+  const items = [];
+  const consider = (arr, sourceCategory) => {
+    arr.forEach(it => {
+      if (typeof it.applies === 'function' && !it.applies(p)) return;
+      const due = it.dueRule(p);
+      items.push({
+        id: it.id,
+        name: it.name,
+        agency: it.agency,
+        frequency: it.frequency,
+        category: it.category || sourceCategory,
+        summary: it.summary,
+        details: it.details,
+        due: due
+      });
+    });
+  };
+  consider(FEDERAL_ITEMS, 'Federal');
+  consider(GOVERNANCE_ITEMS, 'Governance');
+  // Home state items — all 50 states + DC covered
+  if (p.state && STATE_ITEMS[p.state]){
+    consider(STATE_ITEMS[p.state], 'State');
+  }
+  // Fundraising-state items (charitable registration in each, if not the home state)
+  if (p.fundStates){
+    p.fundStates.forEach(s => {
+      if (s === p.state) return;
+      const stateName = STATES[s] || s;
+      // If we have detailed state items, surface them
+      if (STATE_ITEMS[s]){
+        STATE_ITEMS[s].forEach(it => {
+          if (it.applies && !it.applies(p)) return;
+          items.push({
+            id: 'fund-'+s+'-'+it.id,
+            name: stateName + ' — ' + it.name,
+            agency: it.agency,
+            frequency: it.frequency,
+            category: 'Fundraising state',
+            summary: it.summary,
+            details: it.details,
+            due: it.dueRule(p)
+          });
+        });
+      }
+      // (All 50 states + DC have detailed items, so no fallback needed)
+    });
+  }
+  return items.sort((a,b) => a.due - b.due);
+}
+
+function statusFor(itemId){
+  const t = currentTeam();
+  return (t && t.statuses && t.statuses[itemId]) || 'not_started';
+}
+function setStatus(itemId, status){
+  const t = currentTeam();
+  if (!t) return;
+  t.statuses = t.statuses || {};
+  const oldStatus = t.statuses[itemId] || 'not_started';
+  if (oldStatus === status) return;
+  t.statuses[itemId] = status;
+  // Find item name for the history entry
+  const items = compileItems();
+  const it = items.find(i => i.id === itemId);
+  logHistory({
+    type: 'status_change',
+    itemId: itemId,
+    itemName: it ? it.name : itemId,
+    oldStatus, newStatus: status
+  });
+  save();
+}
+
+function daysUntil(d){
+  const now = new Date(); now.setHours(0,0,0,0);
+  const t = new Date(d); t.setHours(0,0,0,0);
+  return Math.round((t - now) / (1000*60*60*24));
+}
+function formatDate(d){
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+function shortDate(d){
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+}
+
+// ═════════════════════════════════════════════
+//  NAVIGATION
+// ═════════════════════════════════════════════
+function navigate(target){
+  const pages = ['dashboard','calendar','filings','documents','education','history','analytics','team','settings','admin'];
+  pages.forEach(p => {
+    const el = document.getElementById('page-'+p);
+    if (el) el.classList.toggle('hidden', p !== target);
+    const nav = document.getElementById('nav-'+p);
+    if (nav) nav.classList.toggle('active', p === target);
+  });
+  if (target==='dashboard') renderDashboard();
+  if (target==='calendar') renderCalendar();
+  if (target==='filings') renderFilings();
+  if (target==='documents') renderDocuments();
+  if (target==='education') renderEducation();
+  if (target==='history') renderHistory();
+  if (target==='analytics') renderAnalytics();
+  if (target==='team') renderTeam();
+  if (target==='settings') renderSettings();
+  if (target==='admin') renderAdmin();
+  window.scrollTo(0,0);
+}
+
+// ═════════════════════════════════════════════
+//  DASHBOARD
+// ═════════════════════════════════════════════
+function renderDashboard(){
+  const t = currentTeam();
+  if (!t){ document.getElementById('page-dashboard').innerHTML = '<div class="empty-state">No team selected. Use Admin to pick one or sign in as a team member.</div>'; return; }
+  const items = compileItems();
+  const now = new Date();
+  const overdue = items.filter(i => daysUntil(i.due) < 0 && statusFor(i.id)!=='filed' && statusFor(i.id)!=='na');
+  const within30 = items.filter(i => { const d = daysUntil(i.due); return d>=0 && d<=30 && statusFor(i.id)!=='filed' && statusFor(i.id)!=='na'; });
+  const within90 = items.filter(i => { const d = daysUntil(i.due); return d>30 && d<=90 && statusFor(i.id)!=='filed' && statusFor(i.id)!=='na'; });
+  const filed = items.filter(i => statusFor(i.id) === 'filed');
+
+  const stat = (label, num, sub, alert) => `<div class="stat-card ${alert?'alert':''}"><div class="stat-label">${label}</div><div class="stat-num">${num}</div><div class="stat-sub">${sub}</div></div>`;
+
+  const row = (i) => {
+    const d = daysUntil(i.due);
+    let when, cls;
+    if (d < 0)      { when = `${Math.abs(d)}d late`; cls='overdue'; }
+    else if (d <= 30) { when = `${d}d`;       cls='soon'; }
+    else            { when = shortDate(i.due);            cls='upcoming'; }
+    const status = statusFor(i.id);
+    return `<div class="dl-row ${cls} ${status==='filed'?'done':''}" onclick="openFilingDetail('${i.id}')">
+      <div class="dl-when ${cls}">${when}</div>
+      <div class="dl-info">
+        <div class="dl-name">${i.name}</div>
+        <div class="dl-meta">${i.agency} · ${i.category} · Due ${formatDate(i.due)}</div>
+      </div>
+      <select class="dl-status" onclick="event.stopPropagation()" onchange="setStatus('${i.id}', this.value); renderDashboard()">
+        <option value="not_started" ${status==='not_started'?'selected':''}>Not started</option>
+        <option value="in_progress" ${status==='in_progress'?'selected':''}>In progress</option>
+        <option value="filed" ${status==='filed'?'selected':''}>Filed ✓</option>
+        <option value="na" ${status==='na'?'selected':''}>N/A</option>
+      </select>
+    </div>`;
+  };
+
+  document.getElementById('page-dashboard').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Compliance Dashboard</h1>
+        <div class="page-sub">${t.profile.orgName||'—'} · ${STATES[t.profile.state]||t.profile.state||'—'} · FY ending ${t.profile.fye||'12-31'}</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-outline" href="Guide.html" target="_blank" rel="noopener noreferrer">📖 User Guide</a><button class="btn btn-outline" onclick="navigate('filings')">View all filings →</button></div>
+    </div>
+    <div class="disclaimer"><b>Reference:</b> 50-state filing data sourced from the Build Your Club 50-State Reference (May 2026 edition). State law changes frequently — always verify current requirements with your state agencies and a qualified attorney or CPA before acting.</div>
+    <div class="stats-grid">
+      ${stat('Overdue', overdue.length, overdue.length ? 'Address immediately' : "You’re current", overdue.length>0)}
+      ${stat('Due in 30 days', within30.length, within30.length ? 'Plan time this month' : 'Nothing pressing')}
+      ${stat('Due in 31–90 days', within90.length, 'On the horizon')}
+      ${stat('Filed this year', filed.length, 'Tracked as complete')}
+    </div>
+    ${overdue.length ? `<div class="section">
+      <div class="section-title">⚠ Overdue <span class="badge badge-red">${overdue.length}</span></div>
+      ${overdue.map(row).join('')}
+    </div>` : ''}
+    <div class="section">
+      <div class="section-title">Due in the next 30 days <span class="badge badge-amber">${within30.length}</span></div>
+      ${within30.length ? within30.map(row).join('') : '<div class="empty-state">Nothing pressing in the next 30 days.</div>'}
+    </div>
+    <div class="section">
+      <div class="section-title">Coming up in 31–90 days <span class="badge badge-blue">${within90.length}</span></div>
+      ${within90.length ? within90.map(row).join('') : '<div class="empty-state">All clear on the horizon.</div>'}
+    </div>
+  `;
+}
+
+function openFilingDetail(id){
+  state.selectedFiling = id;
+  navigate('filings');
+}
+
+// ═════════════════════════════════════════════
+//  CALENDAR
+// ═════════════════════════════════════════════
+function renderCalendar(){
+  const items = compileItems();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  // Group by month within the next 12 months
+  const buckets = months.map(()=>[]);
+  items.forEach(i => {
+    const d = i.due;
+    const m = d.getMonth();
+    buckets[m].push({...i, day:d.getDate()});
+  });
+  const monthCard = (m, idx) => {
+    const list = buckets[idx].sort((a,b)=>a.day-b.day);
+    const events = list.length
+      ? list.map(e => `<div class="cal-event"><span class="day">${e.day}</span>${e.name}</div>`).join('')
+      : `<div class="cal-event"><span class="ev-empty">No deadlines</span></div>`;
+    return `<div class="cal-month"><div class="cal-month-name">${m}</div>${events}</div>`;
+  };
+  document.getElementById('page-calendar').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Compliance Calendar</h1>
+        <div class="page-sub">All filings for the next 12 months, grouped by month</div>
+      </div>
+    </div>
+    <div class="cal-grid">${months.map(monthCard).join('')}</div>
+  `;
+}
+
+// ═════════════════════════════════════════════
+//  FILINGS LIST + DETAIL
+// ═════════════════════════════════════════════
+function renderFilings(){
+  const items = compileItems();
+  const groups = {};
+  items.forEach(i => {
+    groups[i.category] = groups[i.category] || [];
+    groups[i.category].push(i);
+  });
+  const order = ['Federal','State','Fundraising state','Governance'];
+  const sortedCats = Object.keys(groups).sort((a,b) => order.indexOf(a) - order.indexOf(b));
+
+  const itemRow = (i) => {
+    const status = statusFor(i.id);
+    const d = daysUntil(i.due);
+    const cls = d < 0 ? 'overdue' : (d <= 30 ? 'soon' : 'upcoming');
+    const open = state.selectedFiling === i.id;
+    return `<div class="dl-row ${cls} ${status==='filed'?'done':''}" style="margin-bottom:0;border-radius:10px 10px ${open?'0 0':'10px 10px'};border-bottom:${open?'none':'1px solid var(--border)'}" onclick="toggleFiling('${i.id}')">
+      <div class="dl-when ${cls}">${shortDate(i.due)}</div>
+      <div class="dl-info">
+        <div class="dl-name">${i.name}</div>
+        <div class="dl-meta">${i.agency} · ${i.frequency}</div>
+      </div>
+      <select class="dl-status" onclick="event.stopPropagation()" onchange="setStatus('${i.id}', this.value); renderFilings()">
+        <option value="not_started" ${status==='not_started'?'selected':''}>Not started</option>
+        <option value="in_progress" ${status==='in_progress'?'selected':''}>In progress</option>
+        <option value="filed" ${status==='filed'?'selected':''}>Filed ✓</option>
+        <option value="na" ${status==='na'?'selected':''}>N/A</option>
+      </select>
+    </div>
+    <div class="filing-detail ${open?'show':''}" style="border-radius:0 0 10px 10px;margin-bottom:8px;border:1px solid var(--border);border-top:none">${i.details || '<i>No additional detail.</i>'}</div>`;
+  };
+
+  document.getElementById('page-filings').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">All Filings</h1>
+        <div class="page-sub">Click any filing to see full requirements, deadlines, and resources</div>
+      </div>
+    </div>
+    ${sortedCats.map(cat => `
+      <div class="section">
+        <div class="section-title">${cat} <span class="badge badge-grey">${groups[cat].length}</span></div>
+        ${groups[cat].map(itemRow).join('')}
+      </div>
+    `).join('')}
+  `;
+}
+function toggleFiling(id){
+  state.selectedFiling = state.selectedFiling === id ? null : id;
+  renderFilings();
+}
+
+// ═════════════════════════════════════════════
+//  DOCUMENTS PAGE + GENERATOR
+// ═════════════════════════════════════════════
+function renderDocuments(){
+  const cards = DOC_TEMPLATES.map(d => `
+    <div class="doc-card" onclick="openDocGenerator('${d.id}')">
+      <div class="doc-icon">${d.icon}</div>
+      <div class="doc-name">${d.name}</div>
+      <div class="doc-desc">${d.desc}</div>
+      <div class="doc-meta">${d.fields.length} field${d.fields.length===1?'':'s'} · template</div>
+    </div>`).join('');
+  document.getElementById('page-documents').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Document Templates</h1>
+        <div class="page-sub">Fill in the form and generate a clean draft you can copy into Word or Google Docs</div>
+      </div>
+    </div>
+    <div id="doc-list"><div class="doc-grid">${cards}</div></div>
+    <div id="doc-generator" class="hidden"></div>
+  `;
+}
+
+function openDocGenerator(id){
+  const doc = DOC_TEMPLATES.find(d => d.id === id);
+  if (!doc) return;
+  state.selectedDoc = id;
+  // Pre-fill orgName when available
+  const u = currentUser();
+  const fields = doc.fields.map(f => {
+    const val = (f.id==='orgName' && u && u.profile.orgName) ? u.profile.orgName : '';
+    const today = new Date().toISOString().slice(0,10);
+    const defaultVal = f.type==='date' ? today : (val || '');
+    if (f.type === 'textarea'){
+      return `<div class="field"><label>${f.label}</label><textarea id="df-${f.id}" placeholder="${f.ph || ''}">${defaultVal}</textarea></div>`;
+    }
+    return `<div class="field"><label>${f.label}</label><input type="${f.type}" id="df-${f.id}" placeholder="${f.ph || ''}" value="${defaultVal}"></div>`;
+  }).join('');
+  document.getElementById('doc-list').classList.add('hidden');
+  const dg = document.getElementById('doc-generator');
+  dg.classList.remove('hidden');
+  dg.innerHTML = `
+    <button class="edu-back" onclick="closeDocGenerator()">← Back to templates</button>
+    <h2 style="font-size:22px;color:var(--navy);margin-bottom:4px">${doc.icon} ${doc.name}</h2>
+    <p style="color:var(--muted);margin-bottom:18px">${doc.desc}</p>
+    <div class="gen-form">
+      <div style="display:grid;gap:8px;margin-bottom:18px">${fields}</div>
+      <div class="gen-toolbar">
+        <button class="btn btn-outline" onclick="document.getElementById('doc-output').innerHTML='<i>Fill in the form above and click Generate Draft.</i>';document.getElementById('doc-output').classList.add('placeholder')">Clear</button>
+        <button class="btn btn-teal" onclick="generateDoc('${id}')">Generate Draft →</button>
+      </div>
+    </div>
+    <div class="gen-toolbar">
+      <button class="btn btn-outline" onclick="copyDoc()">📋 Copy to Clipboard</button>
+      <button class="btn btn-outline" onclick="downloadDoc('${id}')">⬇ Download as .txt</button>
+    </div>
+    <pre id="doc-output" class="gen-output placeholder">Fill in the form above and click Generate Draft.</pre>
+  `;
+}
+function closeDocGenerator(){
+  state.selectedDoc = null;
+  document.getElementById('doc-list').classList.remove('hidden');
+  document.getElementById('doc-generator').classList.add('hidden');
+}
+function generateDoc(id){
+  const doc = DOC_TEMPLATES.find(d => d.id === id);
+  let out = doc.template;
+  doc.fields.forEach(f => {
+    const v = document.getElementById('df-'+f.id).value || '___';
+    // Handle list-formatted fields
+    if (['oldBiz','newBiz','present','absent','staff','motions','actionItems','whereas','resolved'].includes(f.id)){
+      const lines = v.split('\n').filter(l => l.trim());
+      let formatted;
+      if (f.id==='oldBiz' || f.id==='newBiz'){
+        formatted = lines.map((l,i) => `   ${String.fromCharCode(97+i)}. ${l.trim()}`).join('\n');
+      } else if (f.id==='motions'){
+        formatted = lines.map(l => {
+          const parts = l.split('/').map(s => s.trim());
+          return `• MOTION: ${parts[0]||l}\n  Moved: ${parts[1]||'—'}  ·  Seconded: ${parts[2]||'—'}  ·  Vote: ${parts[3]||'—'}`;
+        }).join('\n\n');
+      } else if (f.id==='actionItems'){
+        formatted = lines.map(l => {
+          const parts = l.split('/').map(s => s.trim());
+          return `• ${parts[0]||l}  —  Owner: ${parts[1]||'—'}  ·  Due: ${parts[2]||'—'}`;
+        }).join('\n');
+      } else if (f.id==='whereas'){
+        formatted = lines.map(l => `WHEREAS, ${l.trim().replace(/[;\.]$/,'')};`).join('\n\n');
+      } else if (f.id==='resolved'){
+        formatted = lines.map((l,i) => (i===0 ? '' : 'RESOLVED FURTHER, ') + l.trim().replace(/[;\.]$/,'') + ';').join('\n\n');
+        formatted = 'RESOLVED, ' + formatted.replace(/^RESOLVED FURTHER, /,'').replace(/^/, '').slice(0);
+        // Simpler: just rebuild
+        formatted = lines.map((l,i) => (i===0 ? 'RESOLVED, ' : 'RESOLVED FURTHER, ') + l.trim().replace(/[;\.]$/,'') + ';').join('\n\n');
+      } else {
+        formatted = lines.map(l => '• ' + l.trim()).join('\n');
+      }
+      out = out.replace(new RegExp('{{'+f.id+'Formatted}}','g'), formatted || '—');
+    }
+    out = out.replace(new RegExp('{{'+f.id+'}}','g'), v);
+  });
+  // Format dates nicely
+  out = out.replace(/(\d{4}-\d{2}-\d{2})/g, (m) => {
+    try {
+      const d = new Date(m);
+      return d.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+    } catch(e) { return m; }
+  });
+  const o = document.getElementById('doc-output');
+  o.textContent = out;
+  o.classList.remove('placeholder');
+}
+function copyDoc(){
+  const o = document.getElementById('doc-output');
+  if (!o || o.classList.contains('placeholder')) { alert('Generate the document first.'); return; }
+  navigator.clipboard.writeText(o.textContent).then(() => {
+    alert('Copied to clipboard. Paste into Word or Google Docs.');
+  }, () => alert('Copy failed — select the text manually.'));
+}
+function downloadDoc(id){
+  const o = document.getElementById('doc-output');
+  if (!o || o.classList.contains('placeholder')) { alert('Generate the document first.'); return; }
+  const doc = DOC_TEMPLATES.find(d => d.id === id);
+  const blob = new Blob([o.textContent], { type:'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = doc.name.replace(/[^a-z0-9]+/gi,'_').toLowerCase() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═════════════════════════════════════════════
+//  EDUCATION
+// ═════════════════════════════════════════════
+function renderEducation(){
+  if (state.selectedArticle){
+    const a = EDU_ARTICLES.find(x => x.id === state.selectedArticle);
+    if (a){
+      document.getElementById('page-education').innerHTML = `
+        <div class="page-header"><div><h1 class="page-title">Learn</h1><div class="page-sub">Knowledge base for nonprofit compliance</div></div></div>
+        <button class="edu-back" onclick="state.selectedArticle=null;renderEducation()">← Back to articles</button>
+        <div class="edu-article">${a.body}</div>
+      `;
+      window.scrollTo(0,0);
+      return;
+    }
+  }
+  // Group by tag
+  const tags = {};
+  EDU_ARTICLES.forEach(a => { tags[a.tag] = tags[a.tag] || []; tags[a.tag].push(a); });
+  const tagOrder = ['Foundations','Federal','State','Governance'];
+  const sorted = Object.keys(tags).sort((a,b) => tagOrder.indexOf(a) - tagOrder.indexOf(b));
+  document.getElementById('page-education').innerHTML = `
+    <div class="page-header"><div><h1 class="page-title">Learn</h1><div class="page-sub">Plain-language explainers for every compliance topic in this tool</div></div></div>
+    ${sorted.map(tag => `
+      <div class="section">
+        <div class="section-title">${tag} <span class="badge badge-grey">${tags[tag].length}</span></div>
+        <div class="edu-grid">
+          ${tags[tag].map(a => `
+            <div class="edu-card" onclick="state.selectedArticle='${a.id}';renderEducation()">
+              <div class="edu-tag">${a.tag}</div>
+              <div class="edu-title">${a.title}</div>
+              <div class="edu-snip">${a.snip}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// ═════════════════════════════════════════════
+//  SETTINGS
+// ═════════════════════════════════════════════
+function renderSettings(){
+  const u = currentUser();
+  const t = currentTeam();
+  const p = (t && t.profile) || {};
+  const ot = ORG_TYPES.find(o => o.id === p.orgType);
+  const rb = REV_BRACKETS.find(r => r.id === p.revBracket);
+  const sf = STAFF_OPTIONS.find(s => s.id === p.staff);
+  document.getElementById('page-settings').innerHTML = `
+    <div class="page-header"><div><h1 class="page-title">Settings</h1><div class="page-sub">Your organization profile drives which filings appear</div></div></div>
+    <div class="settings-card">
+      <div class="section-title" style="margin-bottom:10px">Organization Profile</div>
+      <div class="settings-row"><div class="settings-label">Name</div><div class="settings-value">${p.orgName || '—'}</div></div>
+      <div class="settings-row"><div class="settings-label">Type</div><div class="settings-value">${ot?ot.label:'—'}</div></div>
+      <div class="settings-row"><div class="settings-label">State</div><div class="settings-value">${STATES[p.state] || p.state || '—'}</div></div>
+      <div class="settings-row"><div class="settings-label">Fiscal year end</div><div class="settings-value">${p.fye || '—'}</div></div>
+      <div class="settings-row"><div class="settings-label">Revenue</div><div class="settings-value">${rb?rb.label:'—'}</div></div>
+      <div class="settings-row"><div class="settings-label">Staff</div><div class="settings-value">${sf?sf.label:'—'}</div></div>
+      <div class="settings-row"><div class="settings-label">Fundraising states</div><div class="settings-value">${(p.fundStates||[]).map(s=>STATES[s]||s).join(', ') || '—'}</div></div>
+      <div style="margin-top:14px">${isLeader() || isSuperAdmin() ? '<button class="btn btn-outline" onclick="startOnboarding()">Edit profile →</button>' : '<div style="font-size:12px;color:var(--muted)">Only the team leader can edit the org profile.</div>'}</div>
+    </div>
+    <div class="settings-card">
+      <div class="section-title" style="margin-bottom:10px">Account</div>
+      <div class="settings-row"><div class="settings-label">Name</div><div class="settings-value">${u.name}</div></div>
+      <div class="settings-row"><div class="settings-label">Email</div><div class="settings-value">${state.currentEmail}</div></div>
+      <div style="margin-top:14px"><button class="btn btn-outline" onclick="signOut()">Sign out</button></div>
+    </div>
+    <div class="settings-card">
+      <div class="section-title" style="margin-bottom:10px">Reset Demo</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Clear all local data and start fresh. Useful for showing the demo from scratch.</p>
+      <button class="btn btn-outline" onclick="if(confirm('Clear all demo data?')){localStorage.removeItem('bya_compliance_v1');location.reload();}">Reset all demo data</button>
+    </div>
+  `;
+}
+
+
+// ═════════════════════════════════════════════
+//  TEAM PAGE
+// ═════════════════════════════════════════════
+function renderTeam(){
+  const u = currentUser();
+  const t = currentTeam();
+  if (!t){ document.getElementById('page-team').innerHTML = '<div class="empty-state">No team selected.</div>'; return; }
+  const members = Object.entries(t.members||{}).map(([email, role]) => {
+    const usr = state.users[email];
+    return { email, role, name: (usr && usr.name) || email };
+  });
+  const leaderCount = members.filter(m => m.role === 'leader').length;
+  const seatLimit = t.isPro ? '∞' : '3';
+  const canInvite = isLeader() && (t.isPro || members.length < 3);
+
+  const memberRow = (m) => `
+    <div class="team-member-row">
+      <div class="user-avatar">${(m.name||'?').charAt(0).toUpperCase()}</div>
+      <div class="team-member-info">
+        <div class="team-member-name">${m.name} ${m.email===state.currentEmail?'<span style="color:var(--muted);font-weight:400">(you)</span>':''}</div>
+        <div class="team-member-email">${m.email}</div>
+      </div>
+      <span class="role-pill role-${m.role}">${m.role}</span>
+      ${isLeader() && m.role!=='leader' && m.email!==state.currentEmail ? `<button class="btn btn-outline" style="padding:6px 12px;font-size:12px" onclick="removeMember('${m.email}')">Remove</button>` : ''}
+    </div>`;
+
+  document.getElementById('page-team').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Team</h1>
+        <div class="page-sub">${members.length} member${members.length===1?'':'s'} · ${seatLimit} seat${seatLimit==='1'?'':'s'} available</div>
+      </div>
+    </div>
+    ${isLeader() ? `
+      <div class="team-code-display">
+        <div class="team-code-label">Invite teammates with this code</div>
+        <div class="team-code-value" id="tc-val">${t.id}</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+          <button class="btn btn-outline" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)" onclick="copyTeamCode()">📋 Copy</button>
+          <button class="btn btn-outline" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)" onclick="regenerateTeamCode()">🔄 New code</button>
+        </div>
+      </div>` : `
+      <div class="disclaimer" style="background:#dbeafe;border-color:#94c3ff;color:var(--navy)"><b>You're a member of this team.</b> The team leader can invite others. You can update filing statuses and see all the team's compliance items.</div>`}
+    <div class="section">
+      <div class="section-title">Members <span class="badge badge-grey">${members.length} / ${seatLimit}</span></div>
+      ${members.map(memberRow).join('')}
+      ${!t.isPro && members.length >= 3 ? `<div style="margin-top:14px;padding:14px;background:#fff7d6;border:1px solid #f5d77f;border-radius:10px;font-size:13px;color:#5c4400"><b>Free plan limit reached.</b> Upgrade to Pro for unlimited team seats. <a onclick="openUpgradeModal()" style="color:var(--navy);font-weight:600;cursor:pointer">View Pro →</a></div>` : ''}
+    </div>
+  `;
+}
+function copyTeamCode(){
+  const t = currentTeam(); if (!t) return;
+  navigator.clipboard.writeText(t.id).then(()=>alert('Team code copied: '+t.id), ()=>alert('Copy failed — code is '+t.id));
+}
+function regenerateTeamCode(){
+  if (!confirm('Generate a new team code? The old code will stop working for new invitations. Existing members are not affected.')) return;
+  const t = currentTeam(); if (!t || !isLeader()) return;
+  // Move team to new code
+  const newCode = generateTeamCode();
+  state.teams[newCode] = { ...t, id: newCode };
+  delete state.teams[t.id];
+  // Update all members' teamId
+  Object.keys(state.teams[newCode].members).forEach(email => {
+    if (state.users[email]) state.users[email].teamId = newCode;
+  });
+  save();
+  renderTeam();
+}
+function removeMember(email){
+  if (!confirm('Remove this team member? They will lose access immediately.')) return;
+  const t = currentTeam(); if (!t || !isLeader()) return;
+  delete t.members[email];
+  if (state.users[email]) state.users[email].teamId = null;
+  logHistory({ type:'member_removed', who: email, itemName: 'Team member removed' });
+  save();
+  renderTeam();
+}
+
+// ═════════════════════════════════════════════
+//  HISTORY PAGE
+// ═════════════════════════════════════════════
+const STATUS_LABEL = { not_started:'Not started', in_progress:'In progress', filed:'Filed ✓', na:'N/A' };
+const STATUS_COLOR = { not_started:'badge-grey', in_progress:'badge-amber', filed:'badge-green', na:'badge-blue' };
+
+function renderHistory(){
+  const t = currentTeam();
+  if (!t){ document.getElementById('page-history').innerHTML = '<div class="empty-state">No team selected.</div>'; return; }
+  const history = t.history || [];
+  const fmtDate = (iso) => { try { return new Date(iso).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); } catch(e){ return iso; } };
+  const userLabel = (email) => { const u = state.users[email]; return u ? u.name : email; };
+
+  const row = (e) => {
+    if (e.type === 'status_change'){
+      return `<div class="hist-row">
+        <div class="hist-when">${fmtDate(e.when)}</div>
+        <div class="hist-who">${userLabel(e.by)}</div>
+        <div class="hist-what">marked <b>${e.itemName}</b> as <span class="hist-status-chip ${STATUS_COLOR[e.newStatus]}">${STATUS_LABEL[e.newStatus]||e.newStatus}</span></div>
+      </div>`;
+    }
+    if (e.type === 'member_added' || e.type === 'member_joined'){
+      return `<div class="hist-row"><div class="hist-when">${fmtDate(e.when)}</div><div class="hist-who">${userLabel(e.by)}</div><div class="hist-what">${e.itemName||'Team change'}</div></div>`;
+    }
+    return `<div class="hist-row"><div class="hist-when">${fmtDate(e.when)}</div><div class="hist-who">${userLabel(e.by)}</div><div class="hist-what">${e.itemName||e.type}</div></div>`;
+  };
+
+  document.getElementById('page-history').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Activity History</h1>
+        <div class="page-sub">${history.length} event${history.length===1?'':'s'} · capped at 200 · useful for board reporting and audit trail</div>
+      </div>
+    </div>
+    <div class="section">
+      ${history.length ? history.map(row).join('') : '<div class="empty-state">No activity yet. Status changes and team events will appear here.</div>'}
+    </div>
+  `;
+}
+
+// ═════════════════════════════════════════════
+//  ANALYTICS PAGE
+// ═════════════════════════════════════════════
+function renderAnalytics(){
+  const t = currentTeam();
+  if (!t){ document.getElementById('page-analytics').innerHTML = '<div class="empty-state">No team selected.</div>'; return; }
+  const items = compileItems();
+  if (!items.length){ document.getElementById('page-analytics').innerHTML = '<div class="empty-state">No items to analyze yet.</div>'; return; }
+
+  // Compliance score: % of items currently filed or N/A (excluding those due more than 60 days out)
+  const dueSoon = items.filter(i => daysUntil(i.due) <= 60);
+  const handled = dueSoon.filter(i => { const s = statusFor(i.id); return s==='filed' || s==='na'; });
+  const score = dueSoon.length ? Math.round((handled.length / dueSoon.length) * 100) : 100;
+
+  // On-time score: filed items / past-due items (items where due date already passed)
+  const pastDue = items.filter(i => daysUntil(i.due) < 0);
+  const pastDueFiled = pastDue.filter(i => statusFor(i.id)==='filed' || statusFor(i.id)==='na');
+  const onTime = pastDue.length ? Math.round((pastDueFiled.length / pastDue.length) * 100) : 100;
+
+  // Overdue count (current)
+  const overdueCount = items.filter(i => daysUntil(i.due) < 0 && statusFor(i.id) !== 'filed' && statusFor(i.id) !== 'na').length;
+
+  // Category breakdown
+  const cats = {};
+  items.forEach(i => {
+    cats[i.category] = cats[i.category] || { total:0, filed:0 };
+    cats[i.category].total++;
+    const s = statusFor(i.id);
+    if (s==='filed' || s==='na') cats[i.category].filed++;
+  });
+
+  const barRow = (label, filed, total) => {
+    const pct = total ? Math.round((filed/total)*100) : 0;
+    return `<div class="bar-row">
+      <div class="bar-label">${label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%">${pct>10?pct+'%':''}</div></div>
+      <div class="bar-meta">${filed}/${total}</div>
+    </div>`;
+  };
+
+  document.getElementById('page-analytics').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Compliance Analytics</h1>
+        <div class="page-sub">Health metrics for ${t.profile.orgName||'your organization'}</div>
+      </div>
+    </div>
+    <div class="score-card">
+      <div class="score-num">${score}%</div>
+      <div class="score-label">Current Compliance Score — filings due within 60 days that are filed or N/A</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">On-time historical</div><div class="stat-num">${onTime}%</div><div class="stat-sub">of past-due items were filed</div></div>
+      <div class="stat-card ${overdueCount>0?'alert':''}"><div class="stat-label">Currently overdue</div><div class="stat-num">${overdueCount}</div><div class="stat-sub">${overdueCount?'Action needed':'You\’re current'}</div></div>
+      <div class="stat-card"><div class="stat-label">Total filings tracked</div><div class="stat-num">${items.length}</div><div class="stat-sub">across all categories</div></div>
+      <div class="stat-card"><div class="stat-label">Activity events</div><div class="stat-num">${(t.history||[]).length}</div><div class="stat-sub">in your audit trail</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">Completion by Category</div>
+      <div class="bar-chart">
+        ${Object.entries(cats).map(([name, c]) => barRow(name, c.filed, c.total)).join('')}
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Status Distribution</div>
+      <div class="bar-chart">
+        ${['not_started','in_progress','filed','na'].map(s => {
+          const count = items.filter(i => statusFor(i.id) === s).length;
+          return barRow(STATUS_LABEL[s], count, items.length);
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ═════════════════════════════════════════════
+//  ADMIN PAGE (super-admin only)
+// ═════════════════════════════════════════════
+function renderAdmin(){
+  if (!isSuperAdmin()){ document.getElementById('page-admin').innerHTML = '<div class="empty-state">Admin only.</div>'; return; }
+  const teams = Object.values(state.teams);
+  const userCount = Object.keys(state.users).length;
+  const proCount = teams.filter(t => t.isPro).length;
+  document.getElementById('page-admin').innerHTML = `
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Admin Console</h1>
+        <div class="page-sub">All teams and users across the demo</div>
+      </div>
+      ${state.adminViewingTeam ? `<button class="btn btn-outline" onclick="exitAdminView()">← Exit team view</button>` : ''}
+    </div>
+    <div class="admin-banner"><b>🔐 Super Admin:</b> ${currentUser().name}. You can view any team's compliance data and impersonate them for support purposes.</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-label">Teams</div><div class="stat-num">${teams.length}</div><div class="stat-sub">organizations registered</div></div>
+      <div class="stat-card"><div class="stat-label">Users</div><div class="stat-num">${userCount}</div><div class="stat-sub">across all teams</div></div>
+      <div class="stat-card"><div class="stat-label">Pro plans</div><div class="stat-num">${proCount}</div><div class="stat-sub">of ${teams.length} total</div></div>
+    </div>
+    <div class="section">
+      <div class="section-title">All Teams</div>
+      ${teams.length ? teams.map(t => {
+        const leader = Object.entries(t.members||{}).find(([e,r]) => r==='leader');
+        const leaderEmail = leader ? leader[0] : '—';
+        const memberCount = Object.keys(t.members||{}).length;
+        return `<div class="admin-team" onclick="adminViewTeam('${t.id}')">
+          <div style="font-size:22px">🏛️</div>
+          <div class="admin-team-info">
+            <div class="admin-team-name">${t.profile && t.profile.orgName || '(unnamed org)'}</div>
+            <div class="admin-team-meta">Code: <b>${t.id}</b> · Leader: ${leaderEmail} · ${memberCount} member${memberCount===1?'':'s'} · ${STATES[t.profile && t.profile.state]||'—'} · ${t.isPro?'<span style="color:var(--teal);font-weight:600">PRO</span>':'Free'}</div>
+          </div>
+          <button class="btn btn-outline" style="padding:6px 14px;font-size:12px">View →</button>
+        </div>`;
+      }).join('') : '<div class="empty-state">No teams yet.</div>'}
+    </div>
+    <div class="section">
+      <div class="section-title">All Users</div>
+      ${Object.entries(state.users).map(([email, u]) => {
+        const tName = u.teamId && state.teams[u.teamId] ? (state.teams[u.teamId].profile.orgName || '(unnamed)') : '—';
+        return `<div class="team-member-row">
+          <div class="user-avatar">${(u.name||'?').charAt(0).toUpperCase()}</div>
+          <div class="team-member-info">
+            <div class="team-member-name">${u.name||email}${u.isSuperAdmin?' <span class="role-pill role-leader">ADMIN</span>':''}</div>
+            <div class="team-member-email">${email} · Team: ${tName}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+function adminViewTeam(tid){
+  if (!isSuperAdmin()) return;
+  state.adminViewingTeam = tid;
+  save();
+  bootApp();
+}
+function exitAdminView(){
+  state.adminViewingTeam = null;
+  save();
+  bootApp();
+}
+
+// ═════════════════════════════════════════════
+//  UPGRADE MODAL / PRO
+// ═════════════════════════════════════════════
+function openUpgradeModal(){
+  const t = currentTeam();
+  if (!t){ alert('Sign in to a team first.'); return; }
+  if (t.isPro){ alert('You\'re already on the Pro plan. Thanks!'); return; }
+  if (!isLeader()){ alert('Only the team leader can upgrade.'); return; }
+  document.getElementById('upgrade-modal').classList.remove('hidden');
+}
+function closeUpgradeModal(){
+  document.getElementById('upgrade-modal').classList.add('hidden');
+}
+function startProTrial(){
+  const t = currentTeam();
+  if (!t || !isLeader()){ closeUpgradeModal(); return; }
+  t.isPro = true;
+  t.isOnTrial = true;
+  const ends = new Date(); ends.setDate(ends.getDate() + 14);
+  t.trialEnds = ends.toISOString();
+  logHistory({ type:'pro_upgrade', itemName:'Upgraded to Pro (14-day trial)' });
+  save();
+  closeUpgradeModal();
+  updateProBadge();
+  alert('🎉 Pro trial activated! You have unlimited team seats for the next 14 days.');
+  if (document.querySelector('#nav-team.active')) renderTeam();
+}
+
+
+// ═════════════════════════════════════════════
+//  MOBILE SIDEBAR TOGGLE
+// ═════════════════════════════════════════════
+function toggleSidebar(){
+  document.querySelector('.sidebar')?.classList.toggle('open');
+  document.querySelector('.sidebar-backdrop')?.classList.toggle('show');
+}
+function closeSidebar(){
+  document.querySelector('.sidebar')?.classList.remove('open');
+  document.querySelector('.sidebar-backdrop')?.classList.remove('show');
+}
+document.addEventListener('click', function(e){
+  if (window.innerWidth <= 768 && e.target.closest('.nav-item')){
+    closeSidebar();
+  }
+});
+
+// ═════════════════════════════════════════════
+//  BOOT
+// ═════════════════════════════════════════════
+load();
+seedDemo();
+if (state.currentEmail && state.users[state.currentEmail]){
+  routeAfterAuth();
+} else {
+  document.getElementById('screen-auth').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
