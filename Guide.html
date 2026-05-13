@@ -3,289 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compliance Tracker — User Guide</title>
+<title>Nonprofit Compliance Tracker — User Guide</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#1B3A5C;--teal:#2563EB;--gold:#D4A017;--bg:#f0f4f8;--white:#fff;--border:#e2e8f0;--text:#1a1a2e;--muted:#64748b;--light:#f8fafc;--red:#c0392b;--green:#2d7a4f}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:var(--teal);text-decoration:none}
-a:hover{text-decoration:underline}
-
-.topbar{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.topbar .mark{width:34px;height:34px;background:var(--teal);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0}
-.topbar .title{font-size:15px;font-weight:700;flex:1}
-.topbar .title span{font-size:11px;font-weight:400;color:rgba(255,255,255,.6);display:block;line-height:1.2}
-.topbar a{color:#fff;font-size:13px;padding:8px 14px;border:1px solid rgba(255,255,255,.25);border-radius:8px;font-weight:600;background:rgba(255,255,255,.06)}
-.topbar a:hover{background:rgba(255,255,255,.12);text-decoration:none}
-
-.layout{display:grid;grid-template-columns:240px 1fr;max-width:1200px;margin:0 auto;gap:28px;padding:28px 24px 60px}
-.toc{position:sticky;top:78px;align-self:start;background:var(--navy);border:1px solid var(--navy);border-radius:14px;padding:18px;max-height:calc(100vh - 100px);overflow-y:auto;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.toc-title{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.toc a{display:block;padding:7px 10px;font-size:13px;color:rgba(255,255,255,.82);border-radius:6px;font-weight:500;margin-bottom:2px}
-.toc a:hover{background:rgba(255,255,255,.08);color:#fff;text-decoration:none}
-.toc a.active{background:var(--teal);color:#fff;font-weight:600}
-
-.main{background:#fff;border:1px solid var(--border);border-radius:14px;padding:40px}
-.hero{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;padding:32px;border-radius:14px;margin-bottom:28px}
-.hero h1{font-size:30px;font-weight:700;margin-bottom:8px}
-.hero p{font-size:15px;opacity:.92}
-
-h2{font-size:24px;color:var(--navy);margin:36px 0 12px;font-weight:700;scroll-margin-top:80px}
-h2:first-of-type{margin-top:0}
-h3{font-size:17px;color:var(--navy);margin:22px 0 8px;font-weight:700}
-p{margin-bottom:12px}
-ul,ol{margin:0 0 14px 22px}
-li{margin-bottom:6px}
-.callout{background:var(--light);border-left:4px solid var(--teal);padding:14px 18px;border-radius:8px;margin:14px 0;font-size:14px}
-.callout.warn{background:#fff7d6;border-color:var(--gold);color:#5c4400}
-.callout.tip{background:#e6f4f1;border-color:var(--teal)}
-.callout b{color:var(--navy)}
-code,kbd{background:var(--light);padding:1px 6px;border-radius:4px;font-family:'Courier New',monospace;font-size:13px;color:var(--navy);border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
-th{background:var(--light);color:var(--navy);font-weight:700}
-
-.role-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;display:inline-block;margin-left:6px}
-.pill-leader{background:#dbeafe;color:var(--navy)}
-.pill-member{background:#eef2f7;color:var(--muted)}
-.pill-admin{background:#fde8e6;color:var(--red)}
-.pill-pro{background:linear-gradient(135deg,var(--gold),#b58814);color:#fff}
-
-@media(max-width:900px){
-  .layout{grid-template-columns:1fr;gap:14px;padding:18px 14px 40px}
-  .toc{position:static;max-height:none;order:2}
-  .main{padding:22px;order:1}
-  .hero{padding:22px}
-  .hero h1{font-size:22px}
-}
+  :root {
+    --navy:#1B3A5C;--teal:#0F766E;--gold:#D4A843;--light:#EFF4FA;--mid:#C8D8EA;
+    --dark:#1E293B;--muted:#64748B;--bg:#F8FAFC;--card:#FFFFFF;--radius:10px;
+    --green:#15803D;--green-bg:#DCFCE7;--amber:#B45309;--amber-bg:#FEF3C7;
+    --red:#DC2626;--red-bg:#FEE2E2;--purple:#7C3AED;--purple-bg:#F5F3FF;
+    --blue:#2563EB;--blue-bg:#EFF6FF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--dark);line-height:1.7;font-size:15px}
+  .layout{display:flex;min-height:100vh}
+  .sidebar{width:265px;min-width:265px;background:var(--navy);color:#fff;position:sticky;top:0;height:100vh;overflow-y:auto;padding:0 0 32px;flex-shrink:0}
+  .sidebar-brand{padding:24px 20px 18px;border-bottom:1px solid rgba(255,255,255,.14);margin-bottom:10px}
+  .sidebar-brand .logo{font-size:18px;font-weight:800;color:var(--gold)}
+  .sidebar-brand .sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;line-height:1.4}
+  .toc-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.32);padding:10px 20px 4px}
+  .toc a{display:block;padding:7px 20px;color:rgba(255,255,255,.68);text-decoration:none;font-size:13px;border-left:3px solid transparent;transition:all .15s}
+  .toc a:hover,.toc a.active{color:#fff;background:rgba(255,255,255,.08);border-left-color:var(--gold)}
+  .toc a.sub{padding-left:34px;font-size:12px;color:rgba(255,255,255,.46)}
+  .toc a.sub:hover{color:rgba(255,255,255,.82)}
+  .toc-sep{border-top:1px solid rgba(255,255,255,.1);margin:10px 0}
+  .main{flex:1;min-width:0;padding:48px 56px;max-width:900px}
+  @media(max-width:820px){.sidebar{display:none}.main{padding:24px 18px}}
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,#1e4d8c 100%);border-radius:var(--radius);padding:40px 44px;color:#fff;margin-bottom:48px}
+  .hero-eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin-bottom:10px;font-weight:600}
+  .hero h1{font-size:28px;font-weight:800;line-height:1.25;margin-bottom:10px}
+  .hero p{color:rgba(255,255,255,.78);font-size:15px;max-width:580px;line-height:1.65}
+  .hero-badges{display:flex;gap:.6rem;margin-top:18px;flex-wrap:wrap}
+  .hero-badge{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:#fff}
+  .section{margin-bottom:60px}
+  h2{font-size:22px;font-weight:700;color:var(--navy);padding-bottom:10px;border-bottom:2px solid var(--mid);margin-bottom:22px;scroll-margin-top:24px}
+  h3{font-size:16px;font-weight:700;color:var(--teal);margin:26px 0 10px}
+  h4{font-size:14px;font-weight:700;color:var(--navy);margin:16px 0 6px}
+  p{margin-bottom:14px}
+  ul,ol{padding-left:22px;margin-bottom:14px}
+  li{margin-bottom:7px}
+  a{color:var(--blue)}
+  strong{color:var(--navy)}
+  .callout{border-left:4px solid var(--gold);background:var(--light);border-radius:0 var(--radius) var(--radius) 0;padding:14px 18px;margin:18px 0}
+  .callout.tip{border-left-color:var(--teal)}
+  .callout.warn{border-left-color:#E87B3B;background:#FFF8F0}
+  .callout.good{border-left-color:var(--green);background:var(--green-bg)}
+  .callout.note{border-left-color:var(--purple);background:var(--purple-bg)}
+  .callout.info{border-left-color:var(--blue);background:var(--blue-bg)}
+  .callout-head{font-weight:700;font-size:14px;color:var(--navy);margin-bottom:6px}
+  .callout p{margin-bottom:6px;font-size:14px}
+  .callout p:last-child{margin-bottom:0}
+  .tbl-wrap{overflow-x:auto;margin:16px 0 24px;border-radius:var(--radius);border:1px solid var(--mid)}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:10px 14px;font-weight:600;font-size:13px}
+  td{padding:10px 14px;border-bottom:1px solid var(--mid);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:nth-child(even) td{background:var(--light)}
+  .pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700}
+  .pill.green{background:var(--green-bg);color:var(--green)}
+  .pill.blue{background:var(--blue-bg);color:var(--blue)}
+  .pill.purple{background:var(--purple-bg);color:var(--purple)}
+  .pill.gold{background:#FEF3C7;color:#92400E}
+  .back-top{display:inline-block;font-size:12px;color:var(--muted);text-decoration:none;margin-top:32px;padding:6px 14px;border:1px solid var(--mid);border-radius:20px}
+  .back-top:hover{color:var(--navy);border-color:var(--navy)}
+  @media print{.sidebar{display:none}.main{padding:24px}}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <div class="mark">B</div>
-  <div class="title">Build Your Club Academy<span>Compliance Tracker — User Guide</span></div>
-  <a href="/">← Back to App</a>
-</div>
-
 <div class="layout">
-  <aside class="toc">
-    <div class="toc-title">In This Guide</div>
-    <a href="#what">What is this tool?</a>
-    <a href="#start">Getting started</a>
-    <a href="#onboarding">The onboarding wizard</a>
-    <a href="#dashboard">Dashboard</a>
-    <a href="#calendar">Calendar</a>
-    <a href="#filings">Filings</a>
-    <a href="#documents">Documents</a>
-    <a href="#learn">Learn</a>
-    <a href="#history">History</a>
-    <a href="#analytics">Analytics</a>
-    <a href="#team">Team</a>
-    <a href="#settings">Settings</a>
-    <a href="#pro">Pro vs Free</a>
-    <a href="#admin">For administrators</a>
-    <a href="#tips">Tips & best practices</a>
-    <a href="#disclaimer">Disclaimer</a>
-  </aside>
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="logo">Build Your Club</div>
+    <div class="sub">Nonprofit Compliance Tracker<br>User Guide</div>
+  </div>
+  <div class="toc-label">Contents</div>
+  <div class="toc">
+    <a href="#about">1. About This Tool</a>
+    <a href="#start">2. Getting Started</a>
+    <a href="#calendar">3. Calendar &amp; Filings</a>
+    <a href="#coverage">4. What's Covered</a>
+    <a href="#docs">5. Documents &amp; Templates</a>
+    <a href="#education">6. Education</a>
+    <a href="#reports">7. Analytics &amp; History</a>
+    <div class="toc-sep"></div>
+    <a href="#contact">Contact &amp; Support</a>
+  </div>
+</nav>
 
-  <article class="main">
-    <div class="hero">
-      <h1>Nonprofit Compliance Tracker</h1>
-      <p>A working tracker for federal, state, and governance filings — designed for nonprofits with 1–10 staff who need a calm, organized way to stay current without hiring a full-time compliance officer.</p>
+<main class="main" id="top">
+  <div class="hero">
+    <div class="hero-eyebrow">Build Your Club · User Guide</div>
+    <h1>Nonprofit Compliance Tracker<br>User Guide</h1>
+    <p>Never miss a filing again. Track every federal, state, and governance deadline — Form 990, state charity registrations, board annual requirements, document retention — with an automatic alert dashboard and exportable filing calendar.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">Federal Filings</span>
+      <span class="hero-badge">15 States</span>
+      <span class="hero-badge">Governance</span>
+      <span class="hero-badge">Document Templates</span>
+      <span class="hero-badge">Calendar Export</span>
     </div>
+  </div>
 
-    <h2 id="what">What is this tool?</h2>
-    <p>The Compliance Tracker keeps every recurring filing a 501(c)(3) needs to make — federal Form 990 versions, state corporate annual reports, state charitable solicitation renewals, payroll tax filings, governance items like the annual board meeting and conflict-of-interest disclosures — in one place. It tells you what's due, when, who's responsible, and how to file. It generates filing-ready document drafts for governance items. And it remembers what you've already done.</p>
-    <p>Think of it less as a "compliance lawyer in a box" and more as a calendar, knowledge base, and document library combined into one workflow.</p>
+  <div class="section" id="about">
+    <h2>1. About This Tool</h2>
+    
+    <p>For most small nonprofits, compliance is a junk drawer: a few items everyone knows about (Form 990) and a long tail of state, federal, and governance requirements that quietly accumulate risk. Missing a state charity renewal can mean fines and loss of fundraising authority; missing your 990 for three years means automatic revocation of your 501(c)(3) status.</p>
+    <p>This tool inventories everything — federal, state-by-state, and governance — and tracks each deadline as a stand-alone task with status, owner, and due date.</p>
+    <div class="callout warn">
+      <div class="callout-head">Three years of missed 990s = automatic revocation</div>
+      <p>The IRS revokes 501(c)(3) status automatically — no warning letter — after three consecutive years of missed Form 990 filings. Hundreds of nonprofits lose status this way every year.</p>
+    </div>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="start">Getting started</h2>
-    <h3>Creating an account</h3>
+  <div class="section" id="start">
+    <h2>2. Getting Started</h2>
+    
+    <p>Demo: <strong>demo@example.org</strong> / <strong>demo</strong> — populated with active filings for California (substitute your state in Settings to get yours).</p>
+    <h3>First 30 minutes</h3>
     <ol>
-      <li>Click <b>Create Account</b> on the sign-in screen.</li>
-      <li>Enter your name, email, and a password (at least 6 characters).</li>
-      <li>On the next screen, choose <b>Start a new organization</b> if you're setting up compliance tracking for your nonprofit for the first time, or <b>Join an existing team</b> if a teammate has shared a 6-character team code with you.</li>
+      <li>Set your state, fiscal year, and EIN in <strong>Settings</strong>.</li>
+      <li>Review the auto-generated filing calendar — confirm each deadline.</li>
+      <li>Mark any past-due items as "filed" with the date filed.</li>
+      <li>Assign each future filing to an owner (ED, board treasurer, secretary).</li>
     </ol>
-    <div class="callout tip"><b>Demo accounts:</b> If you want to try the tool before setting up your own org, sign in as <code>demo@example.org</code> / <code>demo</code>. The demo account is a leader of a fully populated team with sample data.</div>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h3>Joining an existing team</h3>
-    <p>If your organization already has a team set up, ask the team leader for their team code (a 6-character code like <code>MPFC4V</code>). On the team-choice screen, click <b>Join an existing team</b>, enter the code, and submit. You'll join as a <span class="role-pill pill-member">member</span> and skip the onboarding — you'll see the same compliance data your leader set up.</p>
-    <div class="callout warn"><b>Team size limits:</b> Free teams are capped at 3 members. If a team is full, the leader needs to upgrade to Pro before new members can join.</div>
+  <div class="section" id="calendar">
+    <h2>3. Calendar &amp; Filings</h2>
+    
+    <h3>Calendar view</h3>
+    <p>All filings on one timeline. Color-coded by status (upcoming, due soon, overdue, filed).</p>
+    <h3>Filings list</h3>
+    <p>Detail view for each filing: jurisdiction, form name, due date, frequency (annual, biennial, one-time), filing fee, governing authority, owner, status, notes, prior filing history.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="onboarding">The onboarding wizard (for new organizations)</h2>
-    <p>When you create a new organization, you'll walk through a 4-step setup that determines which compliance items appear in your tracker.</p>
-
-    <h3>Step 1 — Organization type</h3>
-    <p>Choose one of these:</p>
+  <div class="section" id="coverage">
+    <h2>4. What's Covered</h2>
+    
+    <h3>Federal</h3>
     <ul>
-      <li><b>501(c)(3) Public Charity</b> — most nonprofits; supported by donations, grants, and program revenue</li>
-      <li><b>501(c)(3) Private Foundation</b> — funded by a single source; files Form 990-PF</li>
-      <li><b>501(c)(4) Social Welfare</b> — civic leagues, advocacy organizations</li>
-      <li><b>501(c)(6) Trade / Business League</b> — chambers, professional associations</li>
-      <li><b>Other</b> — generic 501(c) requirements will be shown</li>
+      <li>Form 990 / 990-EZ / 990-N (Postcard)</li>
+      <li>Form 990-T (UBIT)</li>
+      <li>Form 1099 series (contractors)</li>
+      <li>Form W-9 collection</li>
+      <li>Form 5500 (retirement plans)</li>
     </ul>
-    <p>This determines which version of the IRS Form 990 applies, and whether certain restrictions (like private-foundation excise taxes) are relevant.</p>
-
-    <h3>Step 2 — State of incorporation + fiscal year end</h3>
-    <p>Your state of incorporation determines which corporate annual report and charitable solicitation filings you'll need. Fiscal year end determines when most deadlines fall — many federal and state filings are <i>relative to your fiscal year end</i>, not the calendar year.</p>
-    <div class="callout"><b>Example:</b> If your fiscal year ends June 30, your IRS Form 990 is due November 15 (15th day of the 5th month after FYE). If it ends December 31, it's due May 15.</div>
-
-    <h3>Step 3 — Annual gross revenue bracket</h3>
-    <table>
-      <tr><th>Bracket</th><th>What you file</th></tr>
-      <tr><td>Under $50,000</td><td>Form 990-N (e-Postcard) — 8 questions online</td></tr>
-      <tr><td>$50,000 – $200,000</td><td>Form 990-EZ (short form, ~4 pages + schedules)</td></tr>
-      <tr><td>$200,000 – $1M</td><td>Form 990-EZ or full Form 990</td></tr>
-      <tr><td>$1M – $10M</td><td>Full Form 990</td></tr>
-      <tr><td>Over $10M</td><td>Full Form 990; audit usually required</td></tr>
-    </table>
-
-    <h3>Step 4 — Staff + fundraising states</h3>
-    <p>Selecting paid staff adds payroll tax filings (Form 941 quarterly, W-2s, 1099-NECs). Selecting states where you actively fundraise adds those states' charitable solicitation registration items to your tracker — important because 40+ states require registration before soliciting donations from their residents.</p>
-
-    <h2 id="dashboard">Dashboard</h2>
-    <p>Your home base. Shows:</p>
+    <h3>State (15 states covered, expandable)</h3>
     <ul>
-      <li><b>Overdue</b> — items past their deadline that aren't yet marked Filed or N/A. Red-bordered; address these first.</li>
-      <li><b>Due in 30 days</b> — what to plan for this month.</li>
-      <li><b>Due in 31–90 days</b> — what's coming up. Helpful for scheduling.</li>
-      <li><b>Filed this year</b> — items you've already completed.</li>
+      <li>Charitable solicitation registration &amp; renewal</li>
+      <li>State corporate annual reports / statements of information</li>
+      <li>State sales tax exemption renewal (where applicable)</li>
+      <li>State employment tax filings</li>
     </ul>
-    <p>Click any filing row to expand its full detail page. Use the status dropdown on each row to mark items as <b>Not started</b>, <b>In progress</b>, <b>Filed ✓</b>, or <b>N/A</b>. Every status change is logged in History.</p>
-
-    <h2 id="calendar">Calendar</h2>
-    <p>A 12-month overview showing every deadline grouped by month. Useful for seeing the busy stretches (most nonprofits have a heavy month 4–5 months after fiscal year end when 990 and state filings cluster) and planning team capacity accordingly.</p>
-
-    <h2 id="filings">Filings</h2>
-    <p>The full list of every compliance item that applies to your org, grouped by category:</p>
+    <h3>Governance</h3>
     <ul>
-      <li><b>Federal</b> — IRS filings driven by your revenue bracket and staffing</li>
-      <li><b>State</b> — items for your state of incorporation</li>
-      <li><b>Fundraising State</b> — items for each state you listed during onboarding as a place you actively fundraise</li>
-      <li><b>Governance</b> — annual board meeting, COI disclosures, policy reviews, D&O insurance, audit</li>
+      <li>Annual conflict-of-interest disclosure collection</li>
+      <li>Board officer elections / annual meeting</li>
+      <li>Whistleblower &amp; document-retention policy review</li>
+      <li>Audit / 990 preparation cycle</li>
     </ul>
-    <p>Click any filing to see full requirements, deadlines, agency, fee, audit thresholds, and links to the relevant filing portal.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="documents">Documents</h2>
-    <p>Eight fill-in-the-blank templates that produce filing-ready drafts:</p>
-    <ul>
-      <li><b>Board Meeting Agenda</b> — structured agenda for any meeting</li>
-      <li><b>Board Meeting Minutes</b> — formal minutes documenting decisions and motions</li>
-      <li><b>Annual COI Disclosure Form</b> — for every director and key employee to sign annually</li>
-      <li><b>Conflict of Interest Policy</b> — boilerplate aligned to IRS Form 990 expectations</li>
-      <li><b>Document Retention Policy</b> — standard retention schedule</li>
-      <li><b>Whistleblower Policy</b> — required if you receive federal funds; recommended for all</li>
-      <li><b>Gift Acceptance Policy</b> — what gifts you will and won't accept</li>
-      <li><b>Board Resolution</b> — for formalizing decisions between meetings</li>
-    </ul>
-    <p>Fill in the fields, click <b>Generate Draft</b>, and the tool produces a clean document. Then <b>Copy to Clipboard</b> for pasting into Word or Google Docs, or <b>Download as .txt</b>.</p>
-    <div class="callout tip"><b>Tip:</b> The generated drafts are starting points. Have your organization's legal counsel or experienced board chair review before adopting any policy.</div>
+  <div class="section" id="docs">
+    <h2>5. Documents &amp; Templates</h2>
+    
+    <p>Built-in document templates for the most-asked items — board resolution to file the annual report, conflict-of-interest disclosure form, document retention policy, whistleblower policy, board meeting minutes template. Generate to .docx, edit, file.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="learn">Learn</h2>
-    <p>Twelve plain-language explainers covering every compliance topic the tracker touches: why compliance matters, how Form 990 works, state charitable registration, audit thresholds, COI policies, UBIT, board minutes, fiscal year math, automatic revocation, the W-9 habit, and D&O insurance. Bookmark this section — it's reference material you'll come back to.</p>
+  <div class="section" id="education">
+    <h2>6. Education</h2>
+    
+    <p>Short, plain-language explainers on the requirements most likely to bite you: how 990 reasonable compensation works, when state registration triggers, what "substantiation" means in IRS Pub 1771, when to file 1099-NEC, and more.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="history">History</h2>
-    <p>Every status change is logged: who marked what filing as filed, when, and what the previous status was. The log is capped at 200 entries and shared across all team members.</p>
-    <p><b>Why it's useful:</b> Many board chairs ask for a "what did we file this quarter?" summary. The History page is that summary, ready to screenshot or paste.</p>
+  <div class="section" id="reports">
+    <h2>7. Analytics &amp; History</h2>
+    
+    <p>The History page logs every action (filing marked complete, deadline rescheduled) for audit-trail purposes. The Analytics page shows on-time rate, days-to-deadline distribution, and filing-by-jurisdiction breakdown.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="analytics">Analytics</h2>
-    <p>An executive-style view of compliance health:</p>
-    <ul>
-      <li><b>Compliance Score</b> — % of filings due in the next 60 days that are already filed or marked N/A</li>
-      <li><b>On-time historical</b> — % of past-due items that were filed (vs. lapsed)</li>
-      <li><b>Currently overdue</b> — count of items that should be filed by now but aren't</li>
-      <li><b>Completion by category</b> — horizontal bars showing how each category is doing</li>
-      <li><b>Status distribution</b> — what proportion of filings are in each status</li>
-    </ul>
+  <div class="section" id="contact">
+    <h2>Contact &amp; Support</h2>
+    <p>For questions, feedback, or feature requests, contact the Build Your Club Academy team at <a href="mailto:skycopatc@yahoo.com">skycopatc@yahoo.com</a>. We update these tools regularly — check back for new features.</p>
+    <a class="back-top" href="#top">↑ Back to top</a>
+  </div>
 
-    <h2 id="team">Team</h2>
-    <p>The team page is where the leader manages who's on the team. Two roles exist:</p>
-    <ul>
-      <li><span class="role-pill pill-leader">Leader</span> — full access. Can invite, remove, regenerate code, upgrade to Pro, edit org profile.</li>
-      <li><span class="role-pill pill-member">Member</span> — can view all compliance data and update statuses. Cannot edit org profile or manage team.</li>
-    </ul>
-
-    <h3>Inviting members</h3>
-    <ol>
-      <li>The leader shares the 6-character team code (visible at the top of the Team page).</li>
-      <li>The teammate creates their own account, then selects <b>Join an existing team</b>, enters the code, and joins immediately.</li>
-    </ol>
-    <h3>Regenerating the code</h3>
-    <p>If a code leaks or you simply want a fresh one, click <b>🔄 New code</b>. Existing members remain on the team; only new invitations need the updated code.</p>
-
-    <h3>Removing members</h3>
-    <p>Leaders see a Remove button next to each non-leader member. Removed members lose access immediately.</p>
-
-    <h2 id="settings">Settings</h2>
-    <p>Edit your org profile (leader only), see your account details, and reset all demo data. The org profile drives which compliance items appear, so changing your state or revenue bracket here updates everything immediately.</p>
-    <h3>Signing out</h3>
-    <p>Two places: a <b>↩ Sign Out</b> button at the bottom of the sidebar (under your name), and a small <b>↩ Sign Out</b> button fixed at the top-right of every page. Both do the same thing — clear your session and return to the sign-in screen.</p>
-
-    <h2 id="pro">Pro vs Free</h2>
-    <table>
-      <tr><th>Feature</th><th>Free</th><th>Pro</th></tr>
-      <tr><td>Compliance tracking</td><td>Yes</td><td>Yes</td></tr>
-      <tr><td>All 50 states</td><td>Yes</td><td>Yes</td></tr>
-      <tr><td>Document templates</td><td>Yes</td><td>Yes</td></tr>
-      <tr><td>Education library</td><td>Yes</td><td>Yes</td></tr>
-      <tr><td>History & Analytics</td><td>Yes</td><td>Yes</td></tr>
-      <tr><td>Team seats</td><td>3</td><td>Unlimited</td></tr>
-      <tr><td>Priority support</td><td>—</td><td>Yes</td></tr>
-      <tr><td>Price</td><td>$0</td><td>$29 / month</td></tr>
-    </table>
-    <p>Start with a <b>14-day free trial</b> of Pro to see if you'll need the extra seats. The Pro badge in the sidebar shows your current plan.</p>
-
-    <h2 id="admin">For administrators</h2>
-    <p>Super-admin accounts (marked with the <span class="role-pill pill-admin">Admin</span> badge) have a special <b>Admin Console</b> as their default view. From there, an admin can:</p>
-    <ul>
-      <li>See every team in the system with member counts, state, and plan</li>
-      <li>See every user across all teams</li>
-      <li>Click into any team to view its data — useful for support and troubleshooting</li>
-      <li>Exit the team view to return to the admin console</li>
-    </ul>
-
-    <h2 id="tips">Tips & best practices</h2>
-    <h3>Treat it as a routine, not a fire drill</h3>
-    <p>Compliance becomes painful when it's a once-a-year scramble. Build a monthly habit: 30 minutes on the first Monday of each month to review what's due in the next 60 days and update statuses.</p>
-
-    <h3>Mark items in progress when you start them</h3>
-    <p>Status changes log to History. Marking something as "In progress" creates a record that you started work on it — useful for accountability when multiple people are involved.</p>
-
-    <h3>Don't use the templates blindly</h3>
-    <p>The document templates produce reasonable starting points, but bylaws differ, state law differs, and your situation may have wrinkles the generic template doesn't capture. Have someone with legal or governance experience review before adopting.</p>
-
-    <h3>Read your Form 990 before you file it</h3>
-    <p>The 990 is a public document. Funders, donors, and journalists read it. Your board should see the draft before it's filed. The Form 990 itself asks whether the board reviewed it.</p>
-
-    <h3>Always collect the W-9 first</h3>
-    <p>The single highest-leverage financial habit for a small nonprofit: never write a check to a non-employee without a signed W-9 on file. It saves you hours of January chasing when 1099s are due.</p>
-
-    <h2 id="disclaimer">Disclaimer</h2>
-    <p>The compliance data shown in this tool is sourced from a May 2026 reference workbook and reflects best information as of that date. State law changes frequently. Always verify current requirements with your state agencies and a qualified attorney or CPA before acting on anything you see here.</p>
-    <p>This tool is not legal advice and Build Your Club Academy is not a law firm. The Compliance Tracker is a productivity tool intended to help nonprofit professionals organize their compliance work — it does not replace the judgment of qualified legal counsel.</p>
-
-    <p style="margin-top:32px;padding-top:18px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)">Build Your Club Academy · Compliance Tracker User Guide</p>
-  </article>
+</main>
 </div>
-
-<script>
-// Highlight current section in TOC as you scroll
-const sections = document.querySelectorAll('h2[id]');
-const links = document.querySelectorAll('.toc a');
-const linkByHash = {};
-links.forEach(l => { linkByHash['#'+l.getAttribute('href').slice(1)] = l; });
-function onScroll(){
-  let active = null;
-  const top = 100;
-  sections.forEach(s => {
-    if (s.getBoundingClientRect().top <= top) active = s.id;
-  });
-  links.forEach(l => l.classList.remove('active'));
-  if (active && linkByHash['#'+active]) linkByHash['#'+active].classList.add('active');
-}
-window.addEventListener('scroll', onScroll, { passive:true });
-onScroll();
-</script>
-
 </body>
 </html>
